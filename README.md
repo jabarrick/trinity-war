@@ -16,14 +16,14 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 | 模式 | Mode | 说明 / Notes |
 |---|---|---|
 | ⚔ 快速对战 | Quick match | 选一个阵营，对战两个 AI。Pick a side and face two AIs. |
-| 🐪 丝路论道 | Silk Road Forum (story) | 序章 + 5 章 + 每个阵营各自的尾声。每章有独特规则，进度按阵营分别保存。Prologue, 5 chapters with special rules, and an epilogue for each side. Progress is saved per side. |
+| 🐪 丝路论道 | Silk Road Forum (story) | 序章 + 7 章 + 每个阵营各自的尾声。每章有独特规则，难度从第 1 章约 70% 胜率逐步降到第 7 章约 30%，进度按阵营分别保存。Prologue, 7 chapters with special rules (difficulty goes from about 70% win rate in chapter 1 down to about 30% in chapter 7), and an epilogue for each side. Progress is saved per side. |
 | 📚 图鉴 | Codex | 阵营典故与全部卡牌说明。Lore for each side and the full card list with effect explanations. |
 | 👁 观战 | Spectate | 三个 AI 互相对战。Watch three AIs play. |
 
 ### 规则速览 / Rules in brief
 
 - 每方 40 生命；起手 1 张攻击牌，每回合抽 1 张，手牌上限 6。Life 40; you start with 1 attack card, draw 1 per turn, hand limit 6.
-- **攻击牌**（每方 24 张）消耗 🔮信仰，每回合最多 3 张。**Attack cards** (24 per side) cost faith; at most 3 per turn.
+- **攻击牌**（每方 26 张）消耗 🔮信仰，每回合最多 3 张。**Attack cards** (24 per side) cost faith; at most 3 per turn.
 - 五类**功能牌**（装备/伟人/信条/组织/经典），各 3 档，每类只能部署 1 张：分别提供攻击力、减伤、换牌率、⭐影响/回合、🔮信仰/回合。Five kinds of **function cards** (Gear, Sage, Creed, Order, Scripture), 3 tiers each, one per zone.
 - ⭐影响满 10 可放大招：☸涅槃（回满血+净化+护盾）、☭批斗（全敌-2 并拆光功能牌）、✝审判（复活 3 张攻击牌+全场灼烧+信仰）。At 10 influence, unleash your ultimate: Nirvana, Class Struggle or Judgement.
 - 克制关系：☸ 克 ☭ 克 ✝ 克 ☸（伤害 ×1.2，并回血、加信仰）。Counters: ☸ beats ☭ beats ✝ beats ☸.

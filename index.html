@@ -110,7 +110,7 @@ var HP=40,MH=6,SH=1,SF=3,FT=2,MXF=10,UC=10,AD=1.2,DD=0.85,AHP=0.15,AFB=0.5,IMX=2
 var TRADE_COST=2; // influence cost per completed trade
 // Seat compensation (later seats act later): extra starting faith / extra starting cards
 var SEATF=[0,1.5,1],SEATC=[0,0,1];
-var NCH=5; // number of story chapters (kept in sync with CH below)
+var NCH=7; // number of story chapters (kept in sync with CH below)
 var SAVE_KEY="trinitywar.save",LANG_KEY="trinitywar.lang",SAVE_V=1;
 var ZM={E:1,G:1,C:1,O:1,K:1};
 var ZCATS=["E","G","C","O","K"];
@@ -155,6 +155,8 @@ var D={buddhism:[
 {id:"b22",nm:"度母救度",cost:1,atk:2,d:"绿度母慈悲护佑",fx:"shield",fv:2,cat:"A"},
 {id:"b23",nm:"曼荼罗",cost:2,atk:2,d:"沙画坛城 成而即散",fx:"draw",fv:2,cat:"A"},
 {id:"b24",nm:"转经轮",cost:1,atk:1.5,d:"转一圈如诵一遍",fx:"faith",fv:2,cat:"A"},
+{id:"b25",nm:"施受法",cost:2,atk:2.5,d:"吸入苦痛 呼出安乐",fx:"sway",fv:2,cat:"A"},
+{id:"b26",nm:"酥油灯供",cost:1,atk:2,d:"一盏灯照亮整座佛殿",fx:"faith",fv:1.5,cat:"A"},
 // ── 装备 ⚔攻击力 ──
 {id:"bE1",nm:"念珠",cost:1,d:"菩提子持咒珠",cat:"E",tier:1,pv:{t:"atk",v:1}},
 {id:"bE2",nm:"金刚杵",cost:4,d:"摧灭无明法器",cat:"E",tier:2,pv:{t:"atk",v:2}},
@@ -201,6 +203,8 @@ var D={buddhism:[
 {id:"c22",nm:"民兵连",cost:1,atk:2,d:"全民皆兵边疆",fx:"shield",fv:2,cat:"A"},
 {id:"c23",nm:"大生产运动",cost:2,atk:2,d:"自己动手 丰衣足食",fx:"draw",fv:2,cat:"A"},
 {id:"c24",nm:"雷锋精神",cost:1,atk:1.5,d:"永不生锈的螺丝钉",fx:"faith",fv:2,cat:"A"},
+{id:"c25",nm:"互助组",cost:2,atk:2.5,d:"你帮我 我帮你",fx:"sway",fv:2,cat:"A"},
+{id:"c26",nm:"扫盲夜校",cost:1,atk:2,d:"油灯下一笔一画",fx:"faith",fv:1.5,cat:"A"},
 // ── 装备 ⚔攻击力 ──
 {id:"cE1",nm:"坎土曼",cost:1,d:"维吾尔开荒铁锄",cat:"E",tier:1,pv:{t:"atk",v:1}},
 {id:"cE2",nm:"兵团军刺",cost:4,d:"五六式三棱刺刀",cat:"E",tier:2,pv:{t:"atk",v:2}},
@@ -247,6 +251,8 @@ var D={buddhism:[
 {id:"x22",nm:"全副军装",cost:1,atk:2,d:"以弗所书神兵",fx:"shield",fv:2,cat:"A"},
 {id:"x23",nm:"浪子回头",cost:2,atk:2,d:"父亲远远看见了他",fx:"draw",fv:2,cat:"A"},
 {id:"x24",nm:"芥菜种",cost:1,atk:1.5,d:"信心如一粒芥菜种",fx:"faith",fv:2,cat:"A"},
+{id:"x25",nm:"保罗书信",cost:2,atk:2,d:"写给远方的教会",fx:"sway",fv:2,cat:"A"},
+{id:"x26",nm:"好撒玛利亚人",cost:1,atk:1.5,d:"路旁停下来的那一位",fx:"heal",fv:1.5,cat:"A"},
 // ── 装备 ⚔攻击力 ──
 {id:"xE1",nm:"圣水瓶",cost:1,d:"乡村教会祝福水",cat:"E",tier:1,pv:{t:"atk",v:1}},
 {id:"xE2",nm:"景教石碑",cost:4,d:"大秦景教流行中国碑",cat:"E",tier:2,pv:{t:"atk",v:2}},
@@ -283,9 +289,9 @@ fac:{
   lore:"从家庭聚会到佘山圣殿，传道人带着诗篇、比喻和不灭的盼望。他们的信仰没有上限，大招「审判」唤回倒下的牌，并让全场燃起火焰。"}},
 CN:{A:"⚔攻击",E:"📦装备",G:"👑伟人",C:"📜信条",O:"🏛组织",K:"📖经典"},
 PN:{atk:"⚔攻击力",fg:"🔮信仰/回合",dr:"🛡防御减伤",ig:"⭐影响/回合",tr:"🔄换牌率"},
-FN:{heal:"💚回血",pierce:"🗡穿盾",shield:"🛡护盾",draw:"📜抽牌",revive:"♻复活",nullify:"🚫消益",reflect:"🔄反伤",faith:"🔮信仰",discard:"🗑迫弃",steal:"💰偷血",lock:"🔒封锁",aoe:"💥群伤",destroy:"🔥毁牌",chain:"⚡连锁",burn:"🔥灼烧",armor:"🪨护甲",inspire:"📯鼓舞",purify:"✨净化"},
+FN:{heal:"💚回血",pierce:"🗡穿盾",shield:"🛡护盾",draw:"📜抽牌",revive:"♻复活",nullify:"🚫消益",reflect:"🔄反伤",faith:"🔮信仰",discard:"🗑迫弃",steal:"💰偷血",lock:"🔒封锁",aoe:"💥群伤",destroy:"🔥毁牌",chain:"⚡连锁",burn:"🔥灼烧",armor:"🪨护甲",inspire:"📯鼓舞",purify:"✨净化",sway:"🌬动摇"},
 TN:{1:"普通",2:"精良",3:"史诗"},
-FXD:{heal:"为自己回复{v}生命",pierce:"无视目标护盾",shield:"获得{v}护盾",draw:"抽{v}张牌",revive:"从弃牌堆取回最强的攻击牌",nullify:"先清除目标的护盾与护甲再造成伤害",reflect:"直到你下回合，攻击你的人承受其伤害的40%",faith:"获得{v}信仰",discard:"目标随机弃1张手牌",steal:"从目标偷取{v}生命",lock:"目标下回合攻击牌费用+{v}",aoe:"其余敌人各受{v}伤害",destroy:"摧毁目标手中最便宜的牌",chain:"本回合下一张攻击牌免费",burn:"目标接下来2回合每回合失去{v}生命",armor:"获得{v}护甲3回合（每次受击减伤）",inspire:"本回合之后的攻击+{v}伤害",purify:"清除自身灼烧与封锁"},
+FXD:{sway:"目标失去{v}影响",heal:"为自己回复{v}生命",pierce:"无视目标护盾",shield:"获得{v}护盾",draw:"抽{v}张牌",revive:"从弃牌堆取回最强的攻击牌",nullify:"先清除目标的护盾与护甲再造成伤害",reflect:"直到你下回合，攻击你的人承受其伤害的40%",faith:"获得{v}信仰",discard:"目标随机弃1张手牌",steal:"从目标偷取{v}生命",lock:"目标下回合攻击牌费用+{v}",aoe:"其余敌人各受{v}伤害",destroy:"摧毁目标手中最便宜的牌",chain:"本回合下一张攻击牌免费",burn:"目标接下来2回合每回合失去{v}生命",armor:"获得{v}护甲3回合（每次受击减伤）",inspire:"本回合之后的攻击+{v}伤害",purify:"清除自身灼烧与封锁"},
 exChain:"⚡连锁：下一张免费",
 lgAtk:"{i}【{c}】💎{cost}{adv}→{ti} {dm}伤",advUp:"[▲克制]",advDn:"[▼受制]",
 ultB:"☸涅槃：回满血 净化 +7盾",ultC:"☭批斗：全敌-2 拆光功能牌",ultX:"✝审判：复活{n}张 全敌灼2×3 +6信仰",
@@ -297,7 +303,7 @@ acting:"{f} 行动中",exit:"退出",menu:"菜单",pileInfo:"手{h} 库{d} 弃{x
 pickFac:"选择阵营 · 快速对战",beatsShort:"克{a} 被克{b}",beatsLong:"克制{a}，被{b}克制",
 campaign:"🐪 丝路论道",rules:"📖 游戏规则",codex:"📚 图鉴",spec:"👁 观战模式",
 foot:"三种传统，一场友好的较量。卡牌取材于各自的经典、人物与历史，仅为游戏趣味，无意冒犯任何信仰或立场。",
-close:"关闭",campSub:"剧情模式：五章论坛之旅，选择你代表的一方",proS:"记录者的开篇",btnMenu:"返回主菜单",btnReset:"重置本阵营进度",
+close:"关闭",campSub:"剧情模式：七章丝路论坛之旅，选择你代表的一方",proS:"记录者的开篇",btnMenu:"返回主菜单",btnReset:"重置本阵营进度",
 chShort:"第{n}章",discardNeed:"🗑弃牌 还需{n}张",chainTurn:"⚡连锁：下张攻击免费",yourTurn:"⚡你的回合",
 counter:"克",counteredBy:"克我",handN:"手牌{n}",targeted:"✓ 目标",pickTarget:"点此选为目标",empty:"空",
 dscBanner:"🗑 点击手牌弃掉 还需 {n} 张",tradeProg:"🔄换牌进度 {a}/{b}（完成消耗⭐{c}）",selectTarget:"👆 点击上方敌人选择目标",
@@ -305,7 +311,7 @@ playAtk:"⚔出牌💎{c}",upgrade:"⬆升级💎{c}",deploy:"部署💎{c}",tra
 deckInfo:"库{d} 弃{x}",hpL:"❤生命",faithL:"🔮信仰",infL:"⭐影响",handEmpty:"手牌为空",
 zoneFn:"功能：{p}",noDeploy:"暂无部署",withdraw:"🗑 撤下",
 wins:"{f} 获胜！",victory:"🎉 胜利！",defeat:"😔 你被淘汰了",drawRes:"☯ 同归于尽",goStats:"回合 {r} · 你造成伤害 {d} · 剩余生命 {hp}",btnContinue:"继续 ▶",again:"再来一局",
-ruleLbl:"本章规则：",btnBegin:"开始旅程",btnBack:"返回",btnFight:"⚔ 开始论道",btnNext:"返回章节 ▶",btnEnding:"尾声 ▶",btnRetry:"再试一次",resetQ:"确定重置当前阵营的剧情进度？",
+ruleLbl:"本章规则：",chMeHp:"；你起始生命{mhp}",btnBegin:"开始旅程",btnBack:"返回",btnFight:"⚔ 开始论道",btnNext:"返回章节 ▶",btnEnding:"尾声 ▶",btnRetry:"再试一次",resetQ:"确定重置当前阵营的剧情进度？",
 rulesBody:'<p>起手<b>{SH}</b>张（必含攻击牌），每回合抽1张；手牌上限<b style="color:#f66">{MH}</b>张，回合开始超限须点击弃牌。牌库空时弃牌堆自动洗回。</p>'+
  '<p style="color:#f66">❤ 生命不会自然回复，只能靠大招与攻击附带效果回血。</p><hr>'+
  '<p><b style="color:{cA}">⚔攻击牌</b>：选牌→点敌人选目标→出牌。每回合最多出<b>{MA}</b>张攻击牌。</p>'+
@@ -322,21 +328,27 @@ rulesBody:'<p>起手<b>{SH}</b>张（必含攻击牌），每回合抽1张；手
  '<p style="color:#888">后手补偿：第2位起始+1.5信仰；第3位起始+1信仰，起手多1张牌。</p>',
 proT:"序章 · 驼铃",
 proB:"<p>每隔六十年，当杏花开得比往年早，古丝路上的这座绿洲城就会迎来「三教论坛」。这里不动真刀真枪——只比经卷、宣言与诗篇。喇嘛、革命者与传道人在驿站、巴扎和大院里你来我往，乡亲们为最打动自己的一方喝彩。</p><p>我是论坛的记录者，墨已磨好。今年，{me}派来了最年轻的一位代表——就是你。</p>",
-chT1:"第一章 · 绿洲初会",chR1:"两名对手起始生命仅26",
+chT1:"第一章 · 绿洲初会",chR1:"两名对手起始生命仅{hp}",
 chI1:"<p>第一轮在商队驿站举行，四周堆着丝绸包和葡萄干袋。长老们管这叫「尝茶」：短短的发言，快快的回应，没人指望一局定胜负。</p><p>两位对手上下打量你，客气地笑了笑。让他们看看，{me}派来的可不是孩子。</p>",
 chO1:"<p>最后一句话落下，三方代表在桑树下分享馕和奶茶。老喇嘛给政委倒茶，政委把糖递给牧师。</p><p>长老们在本子上写写画画。你的名字被写了两遍。</p>",
-chT2:"第二章 · 旱季",chR2:"所有人的信仰上限降为6（基督教也不例外）；你起始+2信仰",
+chT2:"第二章 · 旱季",chR2:"所有人的信仰上限降为6（基督教也不例外）；你起始+{fa}信仰；对手起始生命{hp}",
 chI2:"<p>一阵热风从沙漠吹来，坎儿井的水细了。主办方宣布这一轮要「节俭」：灯少一些，椅子少一些，脾气也短一些。</p><p>信念和水一样，得省着用。好钢要用在刀刃上。</p>",
 chO2:"<p>那天夜里下雨了——一场少见的、响亮的沙漠雨。三方代表一起跑到街上，笑着举起碗接水。</p><p>那一刻，没人记得谁赢了。我记得，这是我的职责。但我先把这场雨写了下来。</p>",
-chT3:"第三章 · 大巴扎",chR3:"所有人起手多2张牌，攻击获得的影响翻倍；你起始+1信仰",
+chT3:"第三章 · 大巴扎",chR3:"所有人起手多2张牌，攻击获得的影响翻倍；你起始+{fa}信仰；对手起始生命{hp}",
 chI3:"<p>第三轮移到了星期天的大巴扎，周围是香料摊、打刀的匠人，还有一个卖嗓门特别大的鹦鹉的人。</p><p>这里的人群每分钟都在改主意：一句妙语，上百人跟着你走；一个磕绊，他们就去买哈密瓜了。名气来得快，出丑也一样快。</p>",
 chO3:"<p>日落时分，摊主们已经在向顾客引用你的金句——略有出入。一位地毯商说要「为智慧」给你打折。那只鹦鹉学会了你的一句口号。</p><p>长老们一致认为：这才叫真正的影响力。</p>",
-chT4:"第四章 · 两面受敌",chR4:"两名对手都优先攻击你；你起始获得12护盾、+1信仰和一位普通伟人",
+chT4:"第四章 · 两面受敌",chR4:"两名对手都优先攻击你；你起始获得{sh}护盾、+{fa}信仰和一位普通伟人；对手起始生命{hp}",
 chI4:"<p>消息传开了：{me}是夺冠热门。喝茶时，另外两方达成了一个安静的默契——不管彼此怎么看，先来考考你。</p><p>他们向你保证，这不是针对你。这是论坛能给出的最高赞誉。</p>",
 chO4:"<p>赛后，两位对手与你握手——握得很用力，带点不甘。「下次可没这么容易，」其中一位说。这既是谎话，也是善意。</p><p>大院正在为决赛洒扫。</p>",
-chT5:"第五章 · 千年论坛",chR5:"对手生命44，并预先部署普通装备与伟人；你预先部署普通经典与普通装备",
+chT5:"第五章 · 千年论坛",chR5:"对手生命{hp}，并预先部署普通装备与伟人；你预先部署普通经典与普通装备",
 chI5:"<p>大院里挤满了人：农民、学生、老奶奶、休假的士兵、骑在父亲肩上的孩子。另外两教的资深代表登上台，带着他们一生所学。</p><p>这已经不是尝茶了。不管你信什么，现在就大声地信出来。</p>",
 chO5:"<p>大院先是一片寂静，随后沸腾起来。人们把帽子抛向天空，那只鹦鹉也跟着叫。长老们放下笔，第一次站起来鼓掌。</p>",
+chT6:"第六章 · 沙暴",chR6:"沙暴：所有人手牌上限4，每回合多+1信仰；对手起始生命{hp}",
+chI6:"<p>千年论坛结束了，裁决却还没宣布：一场沙暴封住了城门，整整三天。三方代表挤进同一座老驿站，房间少，灯油更少。</p><p>为了打发时间，长老们提议在灯下继续论道——手里的牌少一点，脑子要转得快一点。门外风声呼啸，屋里的辩论比风还急。</p>",
+chO6:"<p>风停的那天早上，三方代表一起拿铁锹把驿站的门挖了出来。一位驼夫说，他从没听过这么精彩的辩论，也从没听过这么跑调的合唱。</p><p>长老们说，裁决明晚宣布。</p>",
+chT7:"第七章 · 星空长谈",chR7:"最后一夜：对手起始生命{hp}，并预先部署普通组织与伟人；你的大招只需⭐8",
+chI7:"<p>最后一夜，长老们把大家请上驿站的屋顶。头顶是银河，脚下是沉睡的绿洲，没有观众，只有星星和我这个记录者。</p><p>两位对手拿出了他们最好的东西——那些他们真正相信的话。你也一样。这一局不为输赢，只为把心里的话说完。</p>",
+chO7:"<p>天亮的时候，没人记得最后一句话是谁说的。长老们合上本子：「裁决已经有了。」他们没说是给谁的，只是请你来致闭幕词。</p>",
 endT:"尾声",
 end_buddhism:"<p>你说出最后的话：每一场辩论都像沙画坛城，终将被扫去；留下的只有背后的慈悲。你向两位对手鞠躬，感谢他们如此耐心地教会你耐心。</p><p>革命派的代表嘟囔说，这种回答正是最没法反驳的。传道人笑了，说他还是会为你祷告。论坛的旗帜归{me}六十年——第二天一早，你就把它借给了镇上的学校。</p>",
 end_communism:"<p>你感谢的是人群，而不是评委：人民做了决定，本该如此。你宣布奖金将用来打一口新井、修好巴扎的屋顶，并邀请两方对手参加星期六的义务劳动。</p><p>出乎所有人意料，喇嘛第一个扛着铁锹到场，传道人带来了四十人份的午饭。六十年里，论坛的旗帜一直挂在新井上方，井水对每个人都一样甘甜。</p>",
@@ -356,9 +368,9 @@ fac:{
   lore:"From house fellowships to the basilica on Sheshan hill, the preachers carry psalms, parables and an unshakable hope. Their faith has no cap, and their Judgement ultimate brings fallen cards back and sets the whole field alight."}},
 CN:{A:"⚔Attack",E:"📦Gear",G:"👑Sage",C:"📜Creed",O:"🏛Order",K:"📖Scripture"},
 PN:{atk:"⚔Attack",fg:"🔮Faith/turn",dr:"🛡Damage reduction",ig:"⭐Influence/turn",tr:"🔄Trade rate"},
-FN:{heal:"💚Heal",pierce:"🗡Pierce",shield:"🛡Shield",draw:"📜Draw",revive:"♻Revive",nullify:"🚫Dispel",reflect:"🔄Thorns",faith:"🔮Faith",discard:"🗑Discard",steal:"💰Drain",lock:"🔒Lock",aoe:"💥Splash",destroy:"🔥Destroy",chain:"⚡Chain",burn:"🔥Burn",armor:"🪨Armour",inspire:"📯Inspire",purify:"✨Purify"},
+FN:{sway:"🌬Sway",heal:"💚Heal",pierce:"🗡Pierce",shield:"🛡Shield",draw:"📜Draw",revive:"♻Revive",nullify:"🚫Dispel",reflect:"🔄Thorns",faith:"🔮Faith",discard:"🗑Discard",steal:"💰Drain",lock:"🔒Lock",aoe:"💥Splash",destroy:"🔥Destroy",chain:"⚡Chain",burn:"🔥Burn",armor:"🪨Armour",inspire:"📯Inspire",purify:"✨Purify"},
 TN:{1:"Common",2:"Rare",3:"Epic"},
-FXD:{heal:"Heal yourself for {v}",pierce:"Ignores the target's shield",shield:"Gain {v} shield",draw:"Draw {v} cards",revive:"Return your strongest attack from the discard pile to your hand",nullify:"Strip the target's shield and armour before the hit",reflect:"Until your next turn, attackers take 40% of the damage they deal you",faith:"Gain {v} faith",discard:"Target discards a random card",steal:"Steal {v} life from the target",lock:"Target's attacks cost +{v} next turn",aoe:"Each other enemy takes {v} damage",destroy:"Destroy the cheapest card in the target's hand",chain:"Your next attack this turn is free",burn:"Target loses {v} life per turn for 2 turns",armor:"Gain {v} armour for 3 turns (reduces every hit)",inspire:"Your later attacks this turn deal +{v}",purify:"Remove your own burn and lock"},
+FXD:{sway:"The target loses {v} influence",heal:"Heal yourself for {v}",pierce:"Ignores the target's shield",shield:"Gain {v} shield",draw:"Draw {v} cards",revive:"Return your strongest attack from the discard pile to your hand",nullify:"Strip the target's shield and armour before the hit",reflect:"Until your next turn, attackers take 40% of the damage they deal you",faith:"Gain {v} faith",discard:"Target discards a random card",steal:"Steal {v} life from the target",lock:"Target's attacks cost +{v} next turn",aoe:"Each other enemy takes {v} damage",destroy:"Destroy the cheapest card in the target's hand",chain:"Your next attack this turn is free",burn:"Target loses {v} life per turn for 2 turns",armor:"Gain {v} armour for 3 turns (reduces every hit)",inspire:"Your later attacks this turn deal +{v}",purify:"Remove your own burn and lock"},
 exChain:"⚡Chain: next one is free",
 lgAtk:"{i}[{c}] 💎{cost}{adv} → {ti} {dm} dmg",advUp:" [▲advantage]",advDn:" [▼disadvantage]",
 ultB:"☸Nirvana: full heal, cleanse, +7 shield",ultC:"☭Class Struggle: all foes -2, function cards torn down",ultX:"✝Judgement: revived {n}, all foes burn 2×3, +6 faith",
@@ -370,7 +382,7 @@ acting:"{f} is acting",exit:"Exit",menu:"Menu",pileInfo:"Hand {h} · Deck {d} ·
 pickFac:"Choose a side · Quick match",beatsShort:"Beats {a} · Weak to {b}",beatsLong:"Beats {a}, weak to {b}",
 campaign:"🐪 Silk Road Forum",rules:"📖 Rules",codex:"📚 Codex",spec:"👁 Spectate",
 foot:"Three traditions, one friendly contest. Cards draw on each side's scriptures, figures and history for fun. No offence to any faith or conviction is intended.",
-close:"Close",campSub:"Story mode: five chapters at the forum. Choose who you represent",proS:"The chronicler's opening",btnMenu:"Main menu",btnReset:"Reset this side's progress",
+close:"Close",campSub:"Story mode: seven chapters on the Silk Road. Choose who you represent",proS:"The chronicler's opening",btnMenu:"Main menu",btnReset:"Reset this side's progress",
 chShort:"Ch. {n}",discardNeed:"🗑Discard {n} more",chainTurn:"⚡Chain: next attack free",yourTurn:"⚡Your turn",
 counter:"prey",counteredBy:"threat",handN:"Hand {n}",targeted:"✓ Target",pickTarget:"Tap to target",empty:"empty",
 dscBanner:"🗑 Tap cards in your hand to discard, {n} more",tradeProg:"🔄Trade {a}/{b} (costs ⭐{c} when complete)",selectTarget:"👆 Tap an enemy above to target it",
@@ -378,7 +390,7 @@ playAtk:"⚔Play 💎{c}",upgrade:"⬆Upgrade 💎{c}",deploy:"Deploy 💎{c}",t
 deckInfo:"Deck {d} · Discard {x}",hpL:"❤Life",faithL:"🔮Faith",infL:"⭐Influence",handEmpty:"Your hand is empty",
 zoneFn:"Effect: {p}",noDeploy:"Nothing deployed",withdraw:"🗑 Withdraw",
 wins:"{f} wins!",victory:"🎉 Victory!",defeat:"😔 You were eliminated",drawRes:"☯ Mutual destruction",goStats:"Round {r} · damage dealt {d} · life left {hp}",btnContinue:"Continue ▶",again:"Play again",
-ruleLbl:"Chapter rule: ",btnBegin:"Begin the journey",btnBack:"Back",btnFight:"⚔ Begin the debate",btnNext:"Back to chapters ▶",btnEnding:"Epilogue ▶",btnRetry:"Try again",resetQ:"Reset the story progress for this side?",
+ruleLbl:"Chapter rule: ",chMeHp:"; you start with {mhp} life",btnBegin:"Begin the journey",btnBack:"Back",btnFight:"⚔ Begin the debate",btnNext:"Back to chapters ▶",btnEnding:"Epilogue ▶",btnRetry:"Try again",resetQ:"Reset the story progress for this side?",
 rulesBody:'<p>You start with <b>{SH}</b> card (always an attack) and draw 1 per turn. Hand limit is <b style="color:#f66">{MH}</b>: if you start a turn above it, tap cards to discard. When the deck runs out, the discard pile is shuffled back.</p>'+
  '<p style="color:#f66">❤ Life never regenerates on its own. Only ultimates and card effects heal.</p><hr>'+
  '<p><b style="color:{cA}">⚔Attack cards</b>: pick a card, tap an enemy to target it, then play. At most <b>{MA}</b> attacks per turn.</p>'+
@@ -395,21 +407,27 @@ rulesBody:'<p>You start with <b>{SH}</b> card (always an attack) and draw 1 per 
  '<p style="color:#888">Turn-order compensation: seat 2 starts with +1.5 faith; seat 3 starts with +1 faith and an extra card.</p>',
 proT:"Prologue: Camel Bells",
 proB:"<p>Every sixty years, when the apricots bloom early, this oasis city on the old Silk Road hosts the Forum of the Three Teachings. Nobody draws a real sword here. They duel with sutras, manifestos and psalms. Lamas, revolutionaries and preachers trade arguments in the caravanserai, the bazaar and the great courtyard, and the townsfolk cheer whoever moves them most.</p><p>I am the forum's chronicler, and my ink is ready. This year, {me} has sent its youngest delegate: you.</p>",
-chT1:"Chapter 1: First Meeting at the Oasis",chR1:"Both opponents start with only 26 life",
+chT1:"Chapter 1: First Meeting at the Oasis",chR1:"Both opponents start with only {hp} life",
 chI1:"<p>The first round is held in the caravanserai, between bales of silk and sacks of raisins. The elders call it a \"tasting\": short speeches and quick replies, and nobody expects it to settle anything.</p><p>Your two rivals look you up and down and smile politely. Show them that {me} did not send a child.</p>",
 chO1:"<p>When the last word is spoken, the three delegations share naan and milk tea under the mulberry tree. The old lama pours for the commissar; the commissar passes the sugar to the pastor.</p><p>The elders scribble in their notebooks. Your name is written down twice.</p>",
-chT2:"Chapter 2: The Dry Season",chR2:"Everyone's faith is capped at 6 (Christianity included); you start with +2 faith",
+chT2:"Chapter 2: The Dry Season",chR2:"Everyone's faith is capped at 6 (Christianity included); you start with +{fa} faith; opponents start with {hp} life",
 chI2:"<p>A hot wind blows in from the desert and the karez channels run thin. The organisers announce a \"frugal\" round, with fewer lamps, fewer chairs and shorter tempers.</p><p>Conviction, like water, must be rationed. Spend it where it counts.</p>",
 chO2:"<p>That night it rains, a rare and noisy desert rain. All three delegations run into the street together, laughing, holding out bowls.</p><p>For a moment nobody remembers who won. I do, because that is my job. But I write down the rain first.</p>",
-chT3:"Chapter 3: The Grand Bazaar",chR3:"Everyone starts with 2 extra cards and influence from attacks is doubled; you start with +1 faith",
+chT3:"Chapter 3: The Grand Bazaar",chR3:"Everyone starts with 2 extra cards and influence from attacks is doubled; you start with +{fa} faith; opponents start with {hp} life",
 chI3:"<p>The third round moves to the Sunday bazaar, among spice stalls, knife-smiths and a man selling very loud parrots.</p><p>The crowd here changes its mind every minute. One good line and a hundred people follow you; one stumble and they wander off to buy melons. Fame comes fast here. So does embarrassment.</p>",
 chO3:"<p>By sunset the stallholders are quoting your best lines to their customers, slightly wrong. A carpet merchant offers you a discount \"for wisdom\". The parrot has learned one of your slogans.</p><p>That, the elders agree, is real influence.</p>",
-chT4:"Chapter 4: Caught Between",chR4:"Both opponents target you first; you start with 12 shield, +1 faith and a common Sage deployed",
+chT4:"Chapter 4: Caught Between",chR4:"Both opponents target you first; you start with {sh} shield, +{fa} faith and a common Sage deployed; opponents start with {hp} life",
 chI4:"<p>Word has spread that {me} is the favourite. Over tea, the other two delegations reach a quiet agreement: whatever they think of each other, they will test you first.</p><p>It is nothing personal, they assure you. It is the highest compliment the forum can pay.</p>",
 chO4:"<p>Afterwards your rivals shake your hand, firmly and a little ruefully. \"Next time we won't make it so easy,\" one of them says. It is a lie, and a kind one.</p><p>The courtyard is being swept for the final.</p>",
-chT5:"Chapter 5: The Grand Forum",chR5:"Opponents have 44 life and start with common Gear and Sage deployed; you start with common Scripture and Gear",
+chT5:"Chapter 5: The Grand Forum",chR5:"Opponents have {hp} life and start with common Gear and Sage deployed; you start with common Scripture and Gear",
 chI5:"<p>The great courtyard is packed: farmers, students, grandmothers, soldiers on leave, children on their fathers' shoulders. The senior delegates of the other two teachings take the stage, carrying everything they have learned in a lifetime.</p><p>This is no tasting. Whatever you believe, believe it now, out loud.</p>",
 chO5:"<p>The courtyard falls silent, then erupts. Hats fly into the air and the parrot joins in. The elders put down their pens and, for the first time, stand to applaud.</p>",
+chT6:"Chapter 6: The Sandstorm",chR6:"Sandstorm: everyone's hand limit is 4 and everyone gains +1 extra faith per turn; opponents start with {hp} life",
+chI6:"<p>The Grand Forum is over, but the verdict has not been announced: a sandstorm has shut the city gates for three days. All three delegations squeeze into the same old caravanserai, with few rooms and even less lamp oil.</p><p>To pass the time, the elders propose to keep debating by lamplight. Fewer cards in hand, quicker wits in the head. Outside the wind howls; inside the arguments fly faster still.</p>",
+chO6:"<p>On the morning the wind drops, the three delegations dig the caravanserai door out together with shovels. A camel driver says he has never heard such fine arguments, nor such out-of-tune singing.</p><p>The elders say the verdict will be given tomorrow night.</p>",
+chT7:"Chapter 7: Under the Stars",chR7:"The last night: opponents start with {hp} life and a common Order and Sage deployed; your ultimate needs only ⭐8",
+chI7:"<p>On the last night the elders invite everyone up onto the caravanserai roof. Above is the Milky Way, below the sleeping oasis. There is no audience, only the stars and me, the chronicler.</p><p>Your two rivals bring out their very best: the words they truly believe. So do you. This round is not about winning; it is about saying everything you came to say.</p>",
+chO7:"<p>When dawn comes, nobody can remember who spoke last. The elders close their notebooks. \"The verdict is reached,\" they say. They do not say for whom; they simply ask you to give the closing words.</p>",
 endT:"Epilogue",
 end_buddhism:"<p>You speak the closing words: every argument, like a sand mandala, is swept away in the end, and only the compassion behind it remains. You bow to your rivals and thank them for being such patient teachers of patience.</p><p>The revolutionary delegate grumbles that this is exactly the kind of answer nobody can argue with. The preacher laughs and promises to pray for you anyway. The forum's banner belongs to {me} for sixty years, and the very next morning you lend it to the town school.</p>",
 end_communism:"<p>You thank the crowd, not the judges: the people decided, as they should. You announce that the prize money will dig a new well and repair the bazaar roof, and you invite both rival delegations to Saturday's volunteer work brigade.</p><p>To everyone's surprise, the lama is first to arrive with a shovel, and the preacher brings lunch for forty. For sixty years the forum's banner hangs above the new well, and the water tastes just as sweet to everyone.</p>",
@@ -429,9 +447,9 @@ fac:{
   lore:"Das reuniões em casa à basílica no monte Sheshan, os pregadores trazem salmos, parábolas e uma esperança inabalável. A sua fé não tem limite, e o supremo Juízo traz de volta cartas caídas e incendeia todo o campo."}},
 CN:{A:"⚔Ataque",E:"📦Equipamento",G:"👑Sábio",C:"📜Credo",O:"🏛Ordem",K:"📖Escritura"},
 PN:{atk:"⚔Ataque",fg:"🔮Fé/turno",dr:"🛡Redução de dano",ig:"⭐Influência/turno",tr:"🔄Taxa de troca"},
-FN:{heal:"💚Cura",pierce:"🗡Perfurar",shield:"🛡Escudo",draw:"📜Comprar",revive:"♻Reviver",nullify:"🚫Dissipar",reflect:"🔄Espinhos",faith:"🔮Fé",discard:"🗑Descarte",steal:"💰Drenar",lock:"🔒Bloqueio",aoe:"💥Área",destroy:"🔥Destruir",chain:"⚡Cadeia",burn:"🔥Queimadura",armor:"🪨Armadura",inspire:"📯Inspirar",purify:"✨Purificar"},
+FN:{sway:"🌬Abalar",heal:"💚Cura",pierce:"🗡Perfurar",shield:"🛡Escudo",draw:"📜Comprar",revive:"♻Reviver",nullify:"🚫Dissipar",reflect:"🔄Espinhos",faith:"🔮Fé",discard:"🗑Descarte",steal:"💰Drenar",lock:"🔒Bloqueio",aoe:"💥Área",destroy:"🔥Destruir",chain:"⚡Cadeia",burn:"🔥Queimadura",armor:"🪨Armadura",inspire:"📯Inspirar",purify:"✨Purificar"},
 TN:{1:"Comum",2:"Raro",3:"Épico"},
-FXD:{heal:"Recupera {v} de vida",pierce:"Ignora o escudo do alvo",shield:"Ganha {v} de escudo",draw:"Compra {v} cartas",revive:"Devolve à mão o teu ataque mais forte da pilha de descarte",nullify:"Remove o escudo e a armadura do alvo antes do golpe",reflect:"Até ao teu próximo turno, quem te atacar sofre 40% do dano que causar",faith:"Ganha {v} de fé",discard:"O alvo descarta uma carta aleatória",steal:"Rouba {v} de vida ao alvo",lock:"Os ataques do alvo custam +{v} no próximo turno",aoe:"Cada outro inimigo sofre {v} de dano",destroy:"Destrói a carta mais barata da mão do alvo",chain:"O teu próximo ataque neste turno é grátis",burn:"O alvo perde {v} de vida por turno durante 2 turnos",armor:"Ganha {v} de armadura durante 3 turnos (reduz cada golpe)",inspire:"Os teus ataques seguintes neste turno causam +{v}",purify:"Remove a tua queimadura e bloqueio"},
+FXD:{sway:"O alvo perde {v} de influência",heal:"Recupera {v} de vida",pierce:"Ignora o escudo do alvo",shield:"Ganha {v} de escudo",draw:"Compra {v} cartas",revive:"Devolve à mão o teu ataque mais forte da pilha de descarte",nullify:"Remove o escudo e a armadura do alvo antes do golpe",reflect:"Até ao teu próximo turno, quem te atacar sofre 40% do dano que causar",faith:"Ganha {v} de fé",discard:"O alvo descarta uma carta aleatória",steal:"Rouba {v} de vida ao alvo",lock:"Os ataques do alvo custam +{v} no próximo turno",aoe:"Cada outro inimigo sofre {v} de dano",destroy:"Destrói a carta mais barata da mão do alvo",chain:"O teu próximo ataque neste turno é grátis",burn:"O alvo perde {v} de vida por turno durante 2 turnos",armor:"Ganha {v} de armadura durante 3 turnos (reduz cada golpe)",inspire:"Os teus ataques seguintes neste turno causam +{v}",purify:"Remove a tua queimadura e bloqueio"},
 exChain:"⚡Cadeia: o próximo é grátis",
 lgAtk:"{i}[{c}] 💎{cost}{adv} → {ti} {dm} de dano",advUp:" [▲vantagem]",advDn:" [▼desvantagem]",
 ultB:"☸Nirvana: cura total, purifica, +7 escudo",ultC:"☭Luta de Classes: todos os inimigos -2, cartas de função derrubadas",ultX:"✝Juízo: {n} revividas, inimigos queimam 2×3, +6 fé",
@@ -443,7 +461,7 @@ acting:"{f} está a jogar",exit:"Sair",menu:"Menu",pileInfo:"Mão {h} · Baralho
 pickFac:"Escolhe um lado · Partida rápida",beatsShort:"Vence {a} · Fraco contra {b}",beatsLong:"Vence {a}, fraco contra {b}",
 campaign:"🐪 Fórum da Rota da Seda",rules:"📖 Regras",codex:"📚 Códice",spec:"👁 Assistir",
 foot:"Três tradições, um confronto amigável. As cartas inspiram-se nas escrituras, figuras e história de cada lado, por diversão. Não há intenção de ofender qualquer fé ou convicção.",
-close:"Fechar",campSub:"Modo história: cinco capítulos no fórum. Escolhe quem representas",proS:"A abertura do cronista",btnMenu:"Menu principal",btnReset:"Repor o progresso deste lado",
+close:"Fechar",campSub:"Modo história: sete capítulos na Rota da Seda. Escolhe quem representas",proS:"A abertura do cronista",btnMenu:"Menu principal",btnReset:"Repor o progresso deste lado",
 chShort:"Cap. {n}",discardNeed:"🗑Descarta mais {n}",chainTurn:"⚡Cadeia: próximo ataque grátis",yourTurn:"⚡O teu turno",
 counter:"presa",counteredBy:"ameaça",handN:"Mão {n}",targeted:"✓ Alvo",pickTarget:"Toca para escolher",empty:"vazio",
 dscBanner:"🗑 Toca em cartas da mão para descartar, faltam {n}",tradeProg:"🔄Troca {a}/{b} (custa ⭐{c} ao concluir)",selectTarget:"👆 Toca num inimigo acima para o escolher",
@@ -451,7 +469,7 @@ playAtk:"⚔Jogar 💎{c}",upgrade:"⬆Melhorar 💎{c}",deploy:"Colocar 💎{c}
 deckInfo:"Baralho {d} · Descarte {x}",hpL:"❤Vida",faithL:"🔮Fé",infL:"⭐Influência",handEmpty:"A tua mão está vazia",
 zoneFn:"Efeito: {p}",noDeploy:"Nada colocado",withdraw:"🗑 Retirar",
 wins:"{f} vence!",victory:"🎉 Vitória!",defeat:"😔 Foste eliminado",drawRes:"☯ Destruição mútua",goStats:"Ronda {r} · dano causado {d} · vida restante {hp}",btnContinue:"Continuar ▶",again:"Jogar outra vez",
-ruleLbl:"Regra do capítulo: ",btnBegin:"Começar a viagem",btnBack:"Voltar",btnFight:"⚔ Começar o debate",btnNext:"Voltar aos capítulos ▶",btnEnding:"Epílogo ▶",btnRetry:"Tentar de novo",resetQ:"Repor o progresso da história deste lado?",
+ruleLbl:"Regra do capítulo: ",chMeHp:"; começas com {mhp} de vida",btnBegin:"Começar a viagem",btnBack:"Voltar",btnFight:"⚔ Começar o debate",btnNext:"Voltar aos capítulos ▶",btnEnding:"Epílogo ▶",btnRetry:"Tentar de novo",resetQ:"Repor o progresso da história deste lado?",
 rulesBody:'<p>Começas com <b>{SH}</b> carta (sempre um ataque) e compras 1 por turno. O limite da mão é <b style="color:#f66">{MH}</b>: se começares um turno acima dele, toca em cartas para descartar. Quando o baralho acaba, a pilha de descarte é baralhada de novo.</p>'+
  '<p style="color:#f66">❤ A vida nunca se regenera sozinha. Só os supremos e efeitos de cartas curam.</p><hr>'+
  '<p><b style="color:{cA}">⚔Cartas de ataque</b>: escolhe uma carta, toca num inimigo para o escolher e joga. No máximo <b>{MA}</b> ataques por turno.</p>'+
@@ -468,21 +486,27 @@ rulesBody:'<p>Começas com <b>{SH}</b> carta (sempre um ataque) e compras 1 por 
  '<p style="color:#888">Compensação de ordem: o lugar 2 começa com +1,5 de fé; o lugar 3 começa com +1 de fé e uma carta extra.</p>',
 proT:"Prólogo: Sinos de Camelo",
 proB:"<p>De sessenta em sessenta anos, quando os damasqueiros florescem cedo, esta cidade-oásis da antiga Rota da Seda acolhe o Fórum das Três Doutrinas. Aqui ninguém desembainha espadas a sério. O duelo faz-se com sutras, manifestos e salmos. Lamas, revolucionários e pregadores trocam argumentos no caravançarai, no bazar e no grande pátio, e o povo aplaude quem mais o comove.</p><p>Sou o cronista do fórum e tenho a tinta pronta. Este ano, {me} enviou o seu delegado mais jovem: tu.</p>",
-chT1:"Capítulo 1: Primeiro Encontro no Oásis",chR1:"Os dois adversários começam com apenas 26 de vida",
+chT1:"Capítulo 1: Primeiro Encontro no Oásis",chR1:"Os dois adversários começam com apenas {hp} de vida",
 chI1:"<p>A primeira ronda decorre no caravançarai, entre fardos de seda e sacos de passas. Os anciãos chamam-lhe «prova do chá»: discursos curtos e respostas rápidas, e ninguém espera que fique tudo decidido.</p><p>Os teus dois rivais olham-te de alto a baixo e sorriem com educação. Mostra-lhes que {me} não mandou uma criança.</p>",
 chO1:"<p>Dita a última palavra, as três delegações partilham naan e chá com leite debaixo da amoreira. O velho lama serve o comissário; o comissário passa o açúcar ao pastor.</p><p>Os anciãos rabiscam nos cadernos. O teu nome é escrito duas vezes.</p>",
-chT2:"Capítulo 2: A Estação Seca",chR2:"A fé de todos tem limite 6 (o Cristianismo incluído); começas com +2 de fé",
+chT2:"Capítulo 2: A Estação Seca",chR2:"A fé de todos tem limite 6 (o Cristianismo incluído); começas com +{fa} de fé; os adversários começam com {hp} de vida",
 chI2:"<p>Um vento quente sopra do deserto e os canais karez correm fracos. A organização anuncia uma ronda «frugal», com menos candeeiros, menos cadeiras e menos paciência.</p><p>A convicção, como a água, tem de ser racionada. Gasta-a onde conta.</p>",
 chO2:"<p>Nessa noite chove, uma chuva de deserto rara e barulhenta. As três delegações correm juntas para a rua, a rir, de taças estendidas.</p><p>Por um momento, ninguém se lembra de quem ganhou. Eu lembro-me, porque é esse o meu ofício. Mas primeiro escrevo a chuva.</p>",
-chT3:"Capítulo 3: O Grande Bazar",chR3:"Todos começam com mais 2 cartas e a influência dos ataques duplica; começas com +1 de fé",
+chT3:"Capítulo 3: O Grande Bazar",chR3:"Todos começam com mais 2 cartas e a influência dos ataques duplica; começas com +{fa} de fé; os adversários começam com {hp} de vida",
 chI3:"<p>A terceira ronda passa para o bazar de domingo, entre bancas de especiarias, cuteleiros e um homem que vende papagaios muito barulhentos.</p><p>Aqui a multidão muda de ideias a cada minuto. Uma boa frase e cem pessoas seguem-te; um tropeção e vão comprar melões. A fama chega depressa, e a vergonha também.</p>",
 chO3:"<p>Ao pôr do sol, os vendedores já citam as tuas melhores frases aos clientes, um pouco tortas. Um mercador de tapetes oferece-te um desconto «pela sabedoria». O papagaio aprendeu um dos teus lemas.</p><p>Isso sim, concordam os anciãos, é influência a sério.</p>",
-chT4:"Capítulo 4: Entre Dois Fogos",chR4:"Os dois adversários atacam-te primeiro; começas com 12 de escudo, +1 de fé e um Sábio comum colocado",
+chT4:"Capítulo 4: Entre Dois Fogos",chR4:"Os dois adversários atacam-te primeiro; começas com {sh} de escudo, +{fa} de fé e um Sábio comum colocado; os adversários começam com {hp} de vida",
 chI4:"<p>Corre a notícia de que {me} é favorito. Ao chá, as outras duas delegações chegam a um acordo discreto: pensem o que pensarem uma da outra, vão pôr-te à prova primeiro.</p><p>Não é nada pessoal, garantem. É o maior elogio que o fórum pode fazer.</p>",
 chO4:"<p>No fim, os rivais apertam-te a mão com firmeza e algum despeito. «Para a próxima não facilitamos», diz um deles. É mentira, e é uma gentileza.</p><p>Varre-se o pátio para a final.</p>",
-chT5:"Capítulo 5: O Grande Fórum",chR5:"Os adversários têm 44 de vida e começam com Equipamento e Sábio comuns; tu começas com Escritura e Equipamento comuns",
+chT5:"Capítulo 5: O Grande Fórum",chR5:"Os adversários têm {hp} de vida e começam com Equipamento e Sábio comuns; tu começas com Escritura e Equipamento comuns",
 chI5:"<p>O grande pátio está a abarrotar: agricultores, estudantes, avós, soldados de licença, crianças aos ombros dos pais. Os delegados mais experientes das outras duas doutrinas sobem ao palco com tudo o que aprenderam numa vida.</p><p>Isto já não é uma prova do chá. Seja no que for que acreditas, acredita agora, em voz alta.</p>",
 chO5:"<p>O pátio fica em silêncio e depois explode. Voam chapéus pelo ar e o papagaio junta-se à festa. Os anciãos pousam as canetas e, pela primeira vez, levantam-se para aplaudir.</p>",
+chT6:"Capítulo 6: A Tempestade de Areia",chR6:"Tempestade: o limite da mão de todos é 4 e todos ganham +1 de fé extra por turno; os adversários começam com {hp} de vida",
+chI6:"<p>O Grande Fórum terminou, mas o veredicto ainda não foi anunciado: uma tempestade de areia fechou as portas da cidade durante três dias. As três delegações apertam-se no mesmo velho caravançarai, com poucos quartos e ainda menos azeite para as lamparinas.</p><p>Para passar o tempo, os anciãos propõem continuar o debate à luz da lamparina. Menos cartas na mão, mais rapidez na cabeça. Lá fora o vento uiva; cá dentro os argumentos voam ainda mais depressa.</p>",
+chO6:"<p>Na manhã em que o vento acalma, as três delegações desenterram juntas a porta do caravançarai à pá. Um cameleiro diz que nunca ouviu argumentos tão bons, nem um coro tão desafinado.</p><p>Os anciãos dizem que o veredicto será dado amanhã à noite.</p>",
+chT7:"Capítulo 7: Sob as Estrelas",chR7:"A última noite: os adversários começam com {hp} de vida e com uma Ordem e um Sábio comuns colocados; o teu supremo só precisa de ⭐8",
+chI7:"<p>Na última noite, os anciãos convidam todos a subir ao telhado do caravançarai. Por cima, a Via Láctea; por baixo, o oásis adormecido. Não há público, só as estrelas e eu, o cronista.</p><p>Os teus dois rivais trazem o melhor que têm: as palavras em que realmente acreditam. Tu também. Esta ronda não é para ganhar; é para dizer tudo o que vieste dizer.</p>",
+chO7:"<p>Quando amanhece, ninguém se lembra de quem falou por último. Os anciãos fecham os cadernos. «O veredicto está dado», dizem. Não dizem a favor de quem; apenas te pedem que digas as palavras de encerramento.</p>",
 endT:"Epílogo",
 end_buddhism:"<p>Dizes as palavras finais: cada argumento, como uma mandala de areia, acaba varrido, e só fica a compaixão que estava por trás. Fazes uma vénia aos rivais e agradeces-lhes por terem sido mestres tão pacientes da paciência.</p><p>O delegado revolucionário resmunga que é precisamente o tipo de resposta impossível de rebater. O pregador ri-se e promete rezar por ti na mesma. O estandarte do fórum pertence a {me} durante sessenta anos, e logo na manhã seguinte emprestas-o à escola da vila.</p>",
 end_communism:"<p>Agradeces à multidão, não aos juízes: o povo decidiu, como deve ser. Anuncias que o prémio vai servir para abrir um poço novo e consertar o telhado do bazar, e convidas as duas delegações rivais para a jornada de trabalho voluntário de sábado.</p><p>Para surpresa geral, o lama é o primeiro a chegar, de pá na mão, e o pregador traz almoço para quarenta. Durante sessenta anos, o estandarte do fórum fica pendurado sobre o poço novo, e a água sabe igualmente doce a toda a gente.</p>",
@@ -494,6 +518,9 @@ loseB:"<p>Até uma derrota é um ensinamento. Os anciãos servem-te mais uma ch�
 var CARD_I18N={
 en:{
 b01:["Great Compassion Mantra","Dhāraṇī of the compassionate heart"],b02:["Six-Syllable Mantra","Om mani padme hum"],b03:["Hundred-Syllable Mantra","Vajrasattva purifies obscurations"],
+b25:["Tonglen","Breathe in pain, breathe out ease"],b26:["Butter Lamp Offering","One lamp lights the whole shrine"],
+c25:["Mutual-Aid Team","You help me, I help you"],c26:["Literacy Night School","Stroke by stroke under the oil lamp"],
+x25:["Letters of Paul","Written to churches far away"],x26:["The Good Samaritan","The one who stopped by the road"],
 b04:["Cundī Mantra","Mother of countless Buddhas"],b05:["Diamond Sutra","Like a dream, an illusion, a bubble"],b06:["Heart Sutra","Form is emptiness"],
 b07:["Tantric Fire Offering","Offerings burn, afflictions turn to ash"],b08:["Gelug Debate","A clap of the hands refutes the error"],b09:["Full Prostration","Sincere full-body prostrations"],
 b10:["Dzogchen","Self-liberation of innate awareness"],b11:["Six Yogas of Naropa","Inner heat, illusory body, clear light"],b12:["Calm and Insight","Śamatha and vipaśyanā in union"],
@@ -535,6 +562,9 @@ xK1:["Chinese Union Version","China's most widely read Bible"],xK2:["The Four Go
 },
 pt:{
 b01:["Mantra da Grande Compaixão","Dharani do coração compassivo"],b02:["Mantra das Seis Sílabas","Om mani padme hum"],b03:["Mantra das Cem Sílabas","Vajrasattva purifica os obscurecimentos"],
+b25:["Tonglen","Inspirar a dor, expirar o alívio"],b26:["Oferenda de Lamparina de Manteiga","Uma lamparina ilumina todo o santuário"],
+c25:["Equipa de Ajuda Mútua","Tu ajudas-me, eu ajudo-te"],c26:["Escola Noturna de Alfabetização","Traço a traço à luz da lamparina"],
+x25:["Cartas de Paulo","Escritas a igrejas distantes"],x26:["O Bom Samaritano","Aquele que parou à beira do caminho"],
 b04:["Mantra de Cundī","Mãe de incontáveis Budas"],b05:["Sutra do Diamante","Como um sonho, uma ilusão, uma bolha"],b06:["Sutra do Coração","A forma é vacuidade"],
 b07:["Oferenda de Fogo Tântrica","As oferendas ardem, as aflições viram cinza"],b08:["Debate Gelug","Um bater de palmas refuta o erro"],b09:["Prostração Completa","Prostrações sinceras de corpo inteiro"],
 b10:["Dzogchen","Autolibertação da consciência inata"],b11:["Seis Yogas de Naropa","Calor interior, corpo ilusório, luz clara"],b12:["Calma e Visão","Śamatha e vipaśyanā em união"],
@@ -648,6 +678,8 @@ function heal(p,v){p.hp=r1(Math.min(p.mhp,p.hp+v))}
 function faithCap(p){return(S.mod&&S.mod.cap)||(p.f==="christianity"?1e9:MXF)}
 function addFaith(p,v){p.faith=r1(Math.min(faithCap(p),p.faith+v))}
 function aCost(p,c){return c.cost+(p.lockT||0)}
+function handMax(){return(S.mod&&S.mod.mh)||MH}
+function uC(p){return(p&&p.hu&&S.mod&&S.mod.uc)||UC}
 
 // Start of a player's turn. Returns 0 if the player died (burn).
 function doTS(p){
@@ -698,6 +730,7 @@ function doAtk(ps,ai,di,card,free){
   if(e==="burn"){d.burn=r1(v);d.burnT=2;ex.push("🔥"+v+"×2")}
   if(e==="armor"){a.armor=r1(v);a.armorT=3;ex.push("🪨"+v)}
   if(e==="inspire"){a.inspired=r1(a.inspired+v);ex.push("📯+"+v)}
+  if(e==="sway"){var sw=r1(Math.min(v,d.inf));d.inf=r1(d.inf-sw);if(sw>0)ex.push("🌬⭐-"+sw)}
   if(e==="purify"){a.burn=0;a.burnT=0;a.locked=0;a.lockT=0;ex.push("✨")}
   if(ah>0)ex.push("☯+"+ah+"❤");
   ps.forEach(function(p){if(p.hp<=0)p.alive=0});
@@ -706,7 +739,7 @@ function doAtk(ps,ai,di,card,free){
 
 function dep(ps,pi,card){var p=ps[pi];p.faith=r1(Math.max(0,p.faith-card.cost));p.hand=p.hand.filter(function(c){return c.id!==card.id});p[card.cat].push(card)}
 
-function doUlt(ps,i){var p=ps[i];p.inf=r1(p.inf-UC);var ex=[];
+function doUlt(ps,i){var p=ps[i];p.inf=r1(p.inf-uC(p));var ex=[];
   if(p.f==="buddhism"){
     p.hp=p.mhp;p.burn=0;p.burnT=0;p.locked=0;p.lockT=0;
     p.shield=r1(p.shield+7);
@@ -726,14 +759,14 @@ function doUlt(ps,i){var p=ps[i];p.inf=r1(p.inf-UC);var ex=[];
   return ex}
 
 // ───────── AI ─────────
-function aiWantsUlt(ps,ai){if(ai.inf<UC)return 0;if(ai.inf>=IMX-1)return 1;
+function aiWantsUlt(ps,ai){if(ai.inf<uC(ai))return 0;if(ai.inf>=IMX-1)return 1;
   if(ai.f==="buddhism")return ai.hp<=ai.mhp*0.6||(ai.burn>0&&ai.hp<=ai.mhp*0.75);
   if(ai.f==="communism"){var z=0,low=0;ps.forEach(function(q){if(q.id!==ai.id&&q.alive){z+=AZ(q).length;if(q.hp<=2)low=1}});return z>=2||low}
   if(ai.f==="christianity")return ai.dis.filter(function(c){return c.cat==="A"}).length>=2;
   return 1}
 function aiScore(ai,c){var s=c.atk,lo=ai.hp<ai.mhp*0.5;
   if(c.fx==="heal"&&lo)s+=c.fv*0.8;if(c.fx==="shield"&&lo)s+=c.fv*0.5;if(c.fx==="steal")s+=c.fv;
-  if(c.fx==="chain")s+=1.5;if(c.fx==="aoe")s+=c.fv;if(c.fx==="burn")s+=c.fv;if(c.fx==="purify"&&(ai.burn>0||ai.lockT))s+=2;return s}
+  if(c.fx==="chain")s+=1.5;if(c.fx==="aoe")s+=c.fv;if(c.fx==="burn")s+=c.fv;if(c.fx==="purify"&&(ai.burn>0||ai.lockT))s+=2;if(c.fx==="sway")s+=c.fv*0.5;return s}
 function aiTarget(ps,ai,card){var ts=ps.filter(function(p){return p.alive&&p.id!==ai.id});if(!ts.length)return null;
   if(S.mod&&S.mod.focus){var h=ts.filter(function(p){return p.hu})[0];if(h)return h}
   var best=null,bs=-1e9;
@@ -744,7 +777,7 @@ function aiTurn(ps,idx){
   var ai=ps[idx],af=F[ai.f];var logs=[K("lgAiTurn",{i:af.icon,f:fR(ai.f)})];
   if(!doTS(ai)){logs.push(K("lgBurnDeath",{f:fR(ai.f)}));return logs}
   var useless=function(x){return x.cat!=="A"&&ai[x.cat].length>0&&(x.tier||0)<=(ai[x.cat][0].tier||0)};
-  while(ai.hand.length>MH){var w=ai.hand.slice().sort(function(a,b){return(useless(b)-useless(a))||((a.cost||0)-(b.cost||0))})[0];ai.hand=ai.hand.filter(function(x){return x.id!==w.id});ai.dis.push(w)}
+  while(ai.hand.length>handMax()){var w=ai.hand.slice().sort(function(a,b){return(useless(b)-useless(a))||((a.cost||0)-(b.cost||0))})[0];ai.hand=ai.hand.filter(function(x){return x.id!==w.id});ai.dis.push(w)}
   // deploy: candidate list sorted by tier desc + cost asc, greedy
   var moves=[];
   ZCATS.forEach(function(cat){ai.hand.forEach(function(c){if(c.cat!==cat)return;var cur=ai[cat][0];
@@ -789,7 +822,7 @@ function beginHuman(p){
   if(!doTS(p)){aL(K("lgBurnDeath",{f:fR(p.f)}));if(!checkEnd())advance(p.id);return}
   S.ph="play";S.sel=null;S.busy=0;S.frN=0;S.atkN=0;S.tradeCnt=0;
   if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();
-  var nd=p.hand.length-MH;S.dsc=nd>0?nd:0;
+  var nd=p.hand.length-handMax();S.dsc=nd>0?nd:0;
   aL(nd>0?K("lgRoundDsc",{r:S.rd,n:nd}):K("lgRound",{r:S.rd}));
   if(p.lockT)aL(K("lgLocked",{n:p.lockT}));render()}
 function autoTgt(){var ens=S.ps.filter(function(p){return!p.hu&&p.alive});if(ens.length===1)S.tgt=ens[0].id}
@@ -839,7 +872,7 @@ window.pc=function(){if(!myTurn()||!S.sel||S.dsc>0)return;var me=S.ps[0];
     aL(K("lgDeploy",{z:{z:cat},c:cR(S.sel)}));dep(S.ps,0,S.sel);S.sel=null}render()};
 window.et=function(){if(!myTurn()||S.dsc>0)return;aL(K("lgEnd"));S.busy=1;S.sel=null;S.tradeCnt=0;render();later(function(){advance(0)},150)};
 window.rz=function(cat,cid){if(!myTurn())return;var me=S.ps[0],c=null;me[cat].forEach(function(x){if(x.id===cid)c=x});me[cat]=me[cat].filter(function(x){return x.id!==cid});if(c){me.dis.push(c);aL(K("lgWithdraw",{c:cR(c)}))}S.zpop="";render()};
-window.uu=function(){if(!myTurn()||S.dsc>0)return;if(S.ps[0].inf<UC)return;doUlt(S.ps,0).forEach(function(e){aL(["⭐",e])});
+window.uu=function(){if(!myTurn()||S.dsc>0)return;if(S.ps[0].inf<uC(S.ps[0]))return;doUlt(S.ps,0).forEach(function(e){aL(["⭐",e])});
   S.ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;aL(K("lgElim",{f:fR(p.f)}))}});if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();if(checkEnd())return;render()};
 window.zp=function(cat){S.zpop=S.zpop===cat?"":cat;render()};
 window.showRules=function(){S.rules=1;render()};
@@ -848,11 +881,19 @@ window.restart=function(){GID++;var o=S.cx;S=blankS("select");S.cx=o;render()};
 
 // ───────── campaign ─────────
 var CH=[
- {n:1,foe:{hp:26},me:{},mod:{}},
- {n:2,foe:{},me:{faith:2},mod:{cap:6}},
- {n:3,foe:{cards:2},me:{cards:2,faith:1},mod:{im:2}},
- {n:4,foe:{},me:{shield:12,faith:1,deploy:[["G",1]]},mod:{focus:1}},
- {n:5,foe:{hp:44,deploy:[["E",1],["G",1]]},me:{deploy:[["K",1],["E",1]]},mod:{}}];
+ {n:1,foe:{hp:26},me:{},mod:{},by:{buddhism:{me:{hp:70}},communism:{me:{hp:54}},christianity:{me:{hp:50}}}},
+ {n:2,foe:{hp:36},me:{faith:2},mod:{cap:6},by:{buddhism:{me:{hp:55}},communism:{me:{hp:61}},christianity:{me:{hp:61}}}},
+ {n:3,foe:{cards:2},me:{cards:2,faith:1},mod:{im:2},by:{buddhism:{foe:{hp:32},me:{hp:63}},communism:{me:{hp:55}},christianity:{foe:{hp:44},me:{hp:46}}}},
+ {n:4,foe:{},me:{shield:12,faith:1,deploy:[["G",1]]},mod:{focus:1},by:{buddhism:{foe:{hp:36},me:{hp:70}},communism:{me:{hp:46}},christianity:{foe:{hp:24},me:{hp:55}}}},
+ {n:5,foe:{hp:44,deploy:[["E",1],["G",1]]},me:{deploy:[["K",1],["E",1]]},mod:{},by:{buddhism:{me:{hp:54}},communism:{foe:{hp:48}},christianity:{me:{hp:54}}}},
+ {n:6,foe:{hp:42},me:{},mod:{mh:4,fd:1},by:{buddhism:{me:{hp:52}},communism:{me:{hp:44}},christianity:{foe:{hp:50}}}},
+ {n:7,foe:{hp:46,deploy:[["O",1],["G",1]]},me:{},mod:{uc:8},by:{buddhism:{foe:{hp:38},me:{hp:67}},communism:{me:{hp:54}},christianity:{foe:{hp:38},me:{hp:63}}}}];
+if(CH.length!==NCH)throw new Error("NCH out of sync");
+// Chapter settings for one side: base settings, then that side's own adjustments (by[f]).
+// Opponent life is tuned per side so that every side gets a similar difficulty curve; the rule text shows the real numbers.
+function chCfg(n,f){var c=CH[n-1],b=(c.by&&c.by[f])||{};return{n:c.n,mod:c.mod||{},foe:Object.assign({},c.foe,b.foe),me:Object.assign({},c.me,b.me)}}
+function chRule(n,f){var c=chCfg(n,f||SV.cf),r=[K("chR"+n,{hp:c.foe.hp||HP,sh:c.me.shield||0,fa:c.me.faith||0})];
+  if(c.me.hp&&c.me.hp!==HP)r.push(K("chMeHp",{mhp:c.me.hp}));return r}
 function stx(k,f){return K(k,{me:fR(f||SV.cf)})}
 function story(title,body,btn,act){S.story={title:title,body:body,btn:btn,act:act};render()}
 window.storyGo=function(){var a=S.story&&S.story.act;S.story=null;if(a)a();else render()};
@@ -861,9 +902,9 @@ window.openCamp=function(){GID++;var o=S.cx;S=blankS("camp");S.cx=o;
 window.campFac=function(f){if(!F[f])return;SV.cf=f;saveSave();render()};
 window.campPro=function(){story(K("proT"),stx("proB"),K("btnBack"),null)};
 window.campPlay=function(n){var f=SV.cf;if(n>SV.prog[f]+1)return;
-  story(K("chT"+n),[stx("chI"+n),'<p class="rule">',K("ruleLbl"),K("chR"+n),'</p>'],K("btnFight"),function(){startChapter(n)})};
+  story(K("chT"+n),[stx("chI"+n),'<p class="rule">',K("ruleLbl"),chRule(n,f),'</p>'],K("btnFight"),function(){startChapter(n)})};
 function startChapter(n){var f=SV.cf,ch=CH[n-1],oth=Object.keys(F).filter(function(x){return x!==f});
-  newMatch([f,oth[0],oth[1]],0,ch);aL(K("chT"+n));aL([K("ruleLbl"),K("chR"+n)]);beginHuman(S.ps[0])}
+  newMatch([f,oth[0],oth[1]],0,chCfg(n,f));aL(K("chT"+n));aL([K("ruleLbl"),chRule(n,f)]);beginHuman(S.ps[0])}
 window.campAfter=function(){var n=S.camp,f=S.ps[0].f;
   if(S.res==="win"){story(K("chT"+n),stx("chO"+n,f),n<CH.length?K("btnNext"):K("btnEnding"),function(){
       if(n<CH.length){openCamp()}else story(K("endT"),[stx("end_"+f,f),'<p class="coda">',K("endCoda"),'</p>'],K("btnBack"),function(){openCamp()})})}
@@ -881,7 +922,7 @@ function pvDisp(c){if(c.pv.t==="tr")return t("trRate",{n:c.pv.v});return"+"+c.pv
 function fxText(c){var s=FXD[c.fx]||"";return s.replace(/\{v\}/g,c.fx==="lock"?(c.fv||1):c.fv)}
 function langBar(){var N=I18N[LANG].langN;return'<div class="langs">'+["zh","en","pt"].map(function(l){return'<button class="lg'+(LANG===l?' on':'')+'" lang="'+I18N[l].htmlLang+'" aria-pressed="'+(LANG===l)+'" onclick="setLang(\''+l+'\')">'+N[l]+'</button>'}).join('')+'</div>'}
 function rr(p,s){var ia=r1(gInfAmp(p)*100);var idr=gInfDR(p);var it=[];if(ia>0)it.push('+'+ia+'%');if(idr>0)it.push('⬇'+idr);
-  return'<div class="stats'+(s?' sm':'')+'"><span style="color:#f66">❤'+r1(p.hp)+'</span><span style="color:#a78bfa">🔮'+r1(p.faith)+'</span><span style="color:#fbbf24">⭐'+r1(p.inf)+'/'+UC+(it.length?' <span style="opacity:.6">('+it.join(' ')+')</span>':'')+'</span>'+(p.shield>0?'<span style="color:#4af">🛡'+r1(p.shield)+'</span>':'')+(p.armor>0?'<span style="color:#ccc">🪨'+r1(p.armor)+'</span>':'')+(p.burn>0?'<span style="color:#ef4444">🔥'+r1(p.burn)+'×'+p.burnT+'</span>':'')+(p.locked>0||p.lockT>0?'<span style="color:#f9a">🔒'+(p.lockT||p.locked)+'</span>':'')+(p.thorn>0?'<span style="color:#7dd">🔄</span>':'')+'</div>'}
+  return'<div class="stats'+(s?' sm':'')+'"><span style="color:#f66">❤'+r1(p.hp)+'</span><span style="color:#a78bfa">🔮'+r1(p.faith)+'</span><span style="color:#fbbf24">⭐'+r1(p.inf)+'/'+uC(p)+(it.length?' <span style="opacity:.6">('+it.join(' ')+')</span>':'')+'</span>'+(p.shield>0?'<span style="color:#4af">🛡'+r1(p.shield)+'</span>':'')+(p.armor>0?'<span style="color:#ccc">🪨'+r1(p.armor)+'</span>':'')+(p.burn>0?'<span style="color:#ef4444">🔥'+r1(p.burn)+'×'+p.burnT+'</span>':'')+(p.locked>0||p.lockT>0?'<span style="color:#f9a">🔒'+(p.lockT||p.locked)+'</span>':'')+(p.thorn>0?'<span style="color:#7dd">🔄</span>':'')+'</div>'}
 function logColor(l){return l.indexOf("⚠")>=0||l.indexOf("❌")>=0?"#f66":l.indexOf("──")===0?"#888":l.indexOf("💀")>=0||l.indexOf("🏆")>=0||l.indexOf("⭐")>=0?"#fbbf24":l.indexOf("▲")>=0||l.indexOf("⬆")>=0?"#4f4":l.indexOf("🔄")>=0?"#4fc3f7":"#ccc"}
 function rLog(){var h='<div id="lb" class="log">';S.log.forEach(function(e){var l=L(e);h+='<div style="color:'+logColor(l)+'">'+l+'</div>'});return h+'</div>'}
 
@@ -941,7 +982,7 @@ function rCamp(){var f=SV.cf,pg=SV.prog[f];
   h+='<div class="tabs">'+Object.keys(F).map(function(k){var x=F[k];return'<button class="tab'+(k===f?' on':'')+'" style="border-color:'+x.c+(k===f?';background:'+x.c+'33':'')+'" onclick="campFac(\''+k+'\')">'+x.icon+' '+x.nm+' <span style="opacity:.7">'+SV.prog[k]+'/'+CH.length+'</span></button>'}).join('')+'</div>';
   h+='<div class="chs"><button class="chb" onclick="campPro()"><b>'+t("proT")+'</b><span>'+t("proS")+'</span></button>';
   CH.forEach(function(c){var n=c.n,lk=n>pg+1,dn=n<=pg;
-    h+='<button class="chb'+(lk?' lk':'')+'" '+(lk?'disabled':'onclick="campPlay('+n+')"')+'><b>'+(dn?'✅ ':lk?'🔒 ':'▶ ')+t("chT"+n)+'</b><span>'+t("chR"+n)+'</span></button>'});
+    h+='<button class="chb'+(lk?' lk':'')+'" '+(lk?'disabled':'onclick="campPlay('+n+')"')+'><b>'+(dn?'✅ ':lk?'🔒 ':'▶ ')+t("chT"+n)+'</b><span>'+L(chRule(n,f))+'</span></button>'});
   if(pg>=CH.length)h+='<button class="chb" style="border-color:'+F[f].c+'" onclick="campEnding(\''+f+'\')"><b>🏆 '+t("endT")+'</b><span>'+F[f].nm+'</span></button>';
   h+='</div><div class="menu"><button class="mb" style="background:#fff1;color:#aaa" onclick="restart()">'+t("btnMenu")+'</button>'+(pg>0?'<button class="mb" style="background:#3a1010;color:#f99" onclick="campReset()">'+t("btnReset")+'</button>':'')+'</div></div>';
   return h}
@@ -995,14 +1036,14 @@ function rGame(){
         h+='<button class="btn ab" style="color:#4fc3f7;background:#4fc3f712;border:1px solid #4fc3f744" onclick="tradeCard()">'+t("trade")+'</button>';
         h+='<button class="btn ab" style="color:#f66;background:#f0000018;border:1px solid #f664" onclick="discardSel()">'+t("discard")+'</button>'}
     }else h+='<span class="hint">'+t("hintIdle",{a:S.atkN,m:MAXATK})+'</span>';
-    if(me.inf>=UC)h+='<button class="btn ab" style="background:linear-gradient(135deg,#a78bfa,#f59e0b);border:1px solid #fbbf24" onclick="uu()">⭐'+mf.ult+'</button>';
+    if(me.inf>=uC(me))h+='<button class="btn ab" style="background:linear-gradient(135deg,#a78bfa,#f59e0b);border:1px solid #fbbf24" onclick="uu()">⭐'+mf.ult+'</button>';
     h+='<button class="btn ab" style="background:#fff1;border:1px solid #fff2;color:#bbb" onclick="et()">'+t("endTurn")+'</button>';
   }else if(S.ph==="play"&&S.busy)h+='<span class="hint">'+t("waiting")+'</span>';
   h+='</div>';
   // my status
   h+='<div class="me"><span style="font-size:15px">'+mf.icon+'</span><span style="font-weight:800;color:'+mf.c+'">'+mf.nm+'</span><div style="flex:1;margin-left:4px">'+rr(me,0)+'</div><span class="pile">'+t("deckInfo",{d:me.deck.length,x:me.dis.length})+'</span></div>';
   h+='<div class="bars">';
-  [{v:me.hp,m:me.mhp,c:"#e55",f:3,l:t("hpL")},{v:me.faith,m:MXF,c:"#a78bfa",f:1,l:t("faithL")},{v:me.inf,m:UC,c:me.inf>=UC?"#f59e0b":"#fbbf24",f:1,l:t("infL")}].forEach(function(b){h+='<div style="flex:'+b.f+'"><div class="bl" style="color:'+b.c+'">'+b.l+'</div><div class="bar"><div class="bari" style="width:'+Math.min(100,b.v/b.m*100)+'%;background:'+b.c+'"></div></div></div>'});h+='</div>';
+  [{v:me.hp,m:me.mhp,c:"#e55",f:3,l:t("hpL")},{v:me.faith,m:MXF,c:"#a78bfa",f:1,l:t("faithL")},{v:me.inf,m:uC(me),c:me.inf>=uC(me)?"#f59e0b":"#fbbf24",f:1,l:t("infL")}].forEach(function(b){h+='<div style="flex:'+b.f+'"><div class="bl" style="color:'+b.c+'">'+b.l+'</div><div class="bar"><div class="bari" style="width:'+Math.min(100,b.v/b.m*100)+'%;background:'+b.c+'"></div></div></div>'});h+='</div>';
   // hand
   h+='<div class="hand">';
   ["A"].concat(ZCATS).forEach(function(cat){var cards=me.hand.filter(function(c){return c.cat===cat});if(!cards.length)return;

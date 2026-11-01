@@ -46,7 +46,7 @@ function story(N){
   CH.forEach(ch=>{
     const per={};let tw=0,tn=0;
     fs.forEach(f=>{const oth=fs.filter(x=>x!==f);let w=0;
-      for(let i=0;i<N;i++){const r=play([f,oth[0],oth[1]],0,ch);if(r.w===0)w++}
+      let cfg=ch;try{cfg=g("chCfg")(ch.n,f)}catch(e){}for(let i=0;i<N;i++){const r=play([f,oth[0],oth[1]],0,cfg);if(r.w===0)w++}
       per[f]=+(100*w/N).toFixed(1);tw+=w;tn+=N});
     res.push({ch:ch.n,all:+(100*tw/tn).toFixed(1),per});
   });
@@ -54,6 +54,7 @@ function story(N){
 }
 const mode=process.argv[2]||"quick",N=+(process.argv[3]||(mode==="quick"?30000:3000));
 const t0=Date.now();
+if(mode==="story"&&process.env.PROXY!=="ai")require("./proxy").install(G);
 const out=mode==="story"?story(N):quick(N);
 console.log(JSON.stringify(out,null,1));
 console.error("time "+((Date.now()-t0)/1000).toFixed(1)+"s");

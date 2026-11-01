@@ -38,6 +38,17 @@ async function run(){
       await tap(".ov .mb");await check("camp");await shot("5-camp");
       await tap(".chb >> nth=1");await check("ch1-intro");await shot("6-ch1");
       await tap(".ov .mb");await page.waitForTimeout(200);await check("ch1-game");
+      // unlock everything: chapters 6/7 and the epilogue
+      await page.evaluate(()=>{restart();openCamp();SV.prog[SV.cf]=CH.length;render()});
+      await check("camp-all");await shot("5b-camp-all");
+      await tap(".chb >> nth="+7);await check("ch7-intro");await shot("6b-ch7");
+      const cur=await page.evaluate(()=>LANG),nxt={zh:"en",en:"pt",pt:"zh"}[cur];
+      await page.evaluate(x=>setLang(x),nxt);await check("ch7-intro-switched");
+      const st=await page.evaluate(()=>document.querySelector(".ov .h").textContent===t("chT7"));if(!st)bad(tag+" story overlay not re-translated");
+      await page.evaluate(x=>setLang(x),cur);
+      await tap(".ov .mb");await page.waitForTimeout(200);await check("ch7-game");
+      await page.evaluate(()=>{restart();openCamp()});
+      await tap(".chb >> nth="+8);await check("ending");await shot("6c-ending");await tap(".ov .mb");
       await page.evaluate(()=>restart());
       // quick match, play with taps
       await tap(".fb >> nth=0");await page.waitForTimeout(200);
