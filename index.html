@@ -70,7 +70,9 @@ button:disabled{cursor:default}
 .sub{font-size:10.5px;color:#777;letter-spacing:1px;margin-bottom:4px;text-align:center}
 .cover{position:relative;width:min(190px,48vw);aspect-ratio:260/398;margin:4px 0 8px;border-radius:4px;box-shadow:0 0 22px #D4A01744;overflow:hidden}
 .cover img{width:100%;height:100%;display:block}
-.cvt{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:3px;color:#FFD700;font-size:17px;font-weight:900;letter-spacing:2px;text-shadow:0 0 8px #CC0000,0 0 3px #000,0 2px 2px #000;background:linear-gradient(180deg,#000c,#0008);padding:8px 5px;border:1px solid #D4A01788;border-radius:3px}
+.cvt{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:row-reverse;gap:4px;color:#FFD700;font-size:17px;font-weight:900;letter-spacing:2px;text-shadow:0 0 8px #CC0000,0 0 3px #000,0 2px 2px #000;background:linear-gradient(180deg,#000c,#0008);padding:8px 5px;border:1px solid #D4A01788;border-radius:3px}
+.cvc{writing-mode:vertical-rl;text-orientation:upright;line-height:1}
+.cvt.lat{font-size:13px;letter-spacing:-1px;padding:7px 4px}
 .lbl{font-size:12px;color:#999;margin-bottom:4px}
 .fbs{display:flex;gap:6px;justify-content:center;width:100%;max-width:440px}
 .fb{flex:1;min-width:0;padding:8px 4px;border-radius:10px;border:2px solid;display:flex;flex-direction:column;align-items:center;color:#ddd;transition:.2s}
@@ -107,7 +109,8 @@ var COVER_SRC="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBA
 var HP=40,MH=6,SH=1,SF=3,FT=2,MXF=10,UC=10,AD=1.2,DD=0.85,AHP=0.15,AFB=0.5,IMX=20,MAXATK=3,THORN=0.4;
 var TRADE_COST=2; // influence cost per completed trade
 // Seat compensation (later seats act later): extra starting faith / extra starting cards
-var SEATF=[0,1,1],SEATC=[0,0,1];
+var SEATF=[0,1.5,1],SEATC=[0,0,1];
+var NCH=5; // number of story chapters (kept in sync with CH below)
 var SAVE_KEY="trinitywar.save",LANG_KEY="trinitywar.lang",SAVE_V=1;
 var ZM={E:1,G:1,C:1,O:1,K:1};
 var ZCATS=["E","G","C","O","K"];
@@ -134,7 +137,7 @@ var D={buddhism:[
 {id:"b04",nm:"准提咒",cost:1,atk:2.5,d:"七俱胝佛母",fx:"faith",fv:1.5,cat:"A"},
 {id:"b05",nm:"金刚般若",cost:4,atk:5,d:"如梦幻泡影",fx:"nullify",fv:0,cat:"A"},
 {id:"b06",nm:"般若心经",cost:2,atk:2,d:"色即是空",fx:"draw",fv:1,cat:"A"},
-{id:"b07",nm:"密宗火供",cost:4,atk:6,d:"焚烧供品化烦恼",fx:"burn",fv:2,cat:"A"},
+{id:"b07",nm:"密宗火供",cost:4,atk:6.5,d:"焚烧供品化烦恼",fx:"burn",fv:2,cat:"A"},
 {id:"b08",nm:"格鲁辩经",cost:3,atk:4,d:"击掌论破邪说",fx:"nullify",fv:0,cat:"A"},
 {id:"b09",nm:"五体投地",cost:1,atk:1,d:"至诚等身长拜",fx:"shield",fv:3,cat:"A"},
 {id:"b10",nm:"大圆满",cost:6,atk:7,d:"本觉自解脱",fx:"heal",fv:4,cat:"A"},
@@ -180,8 +183,8 @@ var D={buddhism:[
 {id:"c04",nm:"实践论",cost:2,atk:2,d:"实践检验真理",fx:"draw",fv:1,cat:"A"},
 {id:"c05",nm:"秋收起义",cost:6,atk:7.5,d:"星火燎原烽烟",fx:"aoe",fv:2,cat:"A"},
 {id:"c06",nm:"戈壁长征",cost:3,atk:3.5,d:"穿越死亡之海",fx:"shield",fv:4,cat:"A"},
-{id:"c07",nm:"坎土曼怒",cost:3,atk:5,d:"垦荒铁锄化战器",fx:"steal",fv:2,cat:"A"},
-{id:"c08",nm:"屯垦烽火",cost:3,atk:5,d:"军垦第一犁",fx:"burn",fv:2,cat:"A"},
+{id:"c07",nm:"坎土曼怒",cost:3,atk:5,d:"垦荒铁锄化战器",fx:"steal",fv:1.5,cat:"A"},
+{id:"c08",nm:"屯垦烽火",cost:3,atk:4.5,d:"军垦第一犁",fx:"burn",fv:2,cat:"A"},
 {id:"c09",nm:"铁拳政权",cost:5,atk:6.5,d:"枪杆子出政权",fx:"pierce",fv:0,cat:"A"},
 {id:"c10",nm:"英特纳雄耐尔",cost:1,atk:1.5,d:"国际悲歌一曲",fx:"faith",fv:2,cat:"A"},
 {id:"c11",nm:"生产竞赛",cost:1,atk:2,d:"多快好省比干劲",fx:"chain",fv:0,cat:"A"},
@@ -269,7 +272,7 @@ var D={buddhism:[
 
 var I18N={
 zh:{
-docTitle:"三教鼎立",htmlLang:"zh-CN",colon:"：",cardRef:"【{c}】",logo:"三 教 鼎 立",sub:"TRINITY WAR · 三方卡牌对战",
+docTitle:"三教鼎立",htmlLang:"zh-CN",colon:"：",cardRef:"【{c}】",logo:"三 教 鼎 立",cvt:"三教鼎立",langN:{zh:"中文",en:"英文",pt:"葡萄牙文"},sub:"TRINITY WAR · 三方卡牌对战",
 trD:"{n}功能→1攻击",trRate:"{n}换1",
 fac:{
  buddhism:{nm:"藏传佛教",ult:"涅槃",ultD:"回满血 净化 +7盾",why:"以空破执",
@@ -316,7 +319,7 @@ rulesBody:'<p>起手<b>{SH}</b>张（必含攻击牌），每回合抽1张；手
  '<p>☸克☭：{wB}<br>☭克✝：{wC}<br>✝克☸：{wX}</p><hr>'+
  '<p><b>状态</b>：🛡护盾先吸收伤害 · 🪨护甲每次受击减伤 · 🔥灼烧每回合掉血 · 🔒封锁使下回合攻击牌更贵 · 🔄反伤让攻击你的人承受40%伤害</p>'+
  '<p><b>三大招：</b><br>{ultB}<br>{ultC}<br>{ultX}</p>'+
- '<p style="color:#888">后手补偿：第2、3位起始+1信仰，第3位起手多1张牌。</p>',
+ '<p style="color:#888">后手补偿：第2位起始+1.5信仰；第3位起始+1信仰，起手多1张牌。</p>',
 proT:"序章 · 驼铃",
 proB:"<p>每隔六十年，当杏花开得比往年早，古丝路上的这座绿洲城就会迎来「三教论坛」。这里不动真刀真枪——只比经卷、宣言与诗篇。喇嘛、革命者与传道人在驿站、巴扎和大院里你来我往，乡亲们为最打动自己的一方喝彩。</p><p>我是论坛的记录者，墨已磨好。今年，{me}派来了最年轻的一位代表——就是你。</p>",
 chT1:"第一章 · 绿洲初会",chR1:"两名对手起始生命仅26",
@@ -342,7 +345,7 @@ endCoda:"——记录完毕。六十年后，杏花还会再开。",
 loseB:"<p>败北也是一种教诲。长老们为你续上一杯茶，允许你再试一次。</p>"
 },
 en:{
-docTitle:"Trinity War",htmlLang:"en",colon:": ",cardRef:"[{c}]",logo:"TRINITY WAR",sub:"Three Teachings · a three-way card battle",
+docTitle:"Trinity War",htmlLang:"en",colon:": ",cardRef:"[{c}]",logo:"TRINITY WAR",cvt:"TRINITY|WAR",langN:{zh:"Chinese",en:"English",pt:"Portuguese"},sub:"Three Teachings · a three-way card battle",
 trD:"{n} function → 1 attack",trRate:"{n} for 1",
 fac:{
  buddhism:{nm:"Tibetan Buddhism",ult:"Nirvana",ultD:"Full heal, cleanse, +7 shield",why:"Emptiness dissolves attachment",
@@ -389,7 +392,7 @@ rulesBody:'<p>You start with <b>{SH}</b> card (always an attack) and draw 1 per 
  '<p>☸ beats ☭: {wB}<br>☭ beats ✝: {wC}<br>✝ beats ☸: {wX}</p><hr>'+
  '<p><b>Statuses</b>: 🛡shield absorbs damage first · 🪨armour reduces every hit · 🔥burn drains life each turn · 🔒lock makes next turn\'s attacks dearer · 🔄thorns return 40% of damage to attackers</p>'+
  '<p><b>The three ultimates:</b><br>{ultB}<br>{ultC}<br>{ultX}</p>'+
- '<p style="color:#888">Turn-order compensation: seats 2 and 3 start with +1 faith; seat 3 also starts with an extra card.</p>',
+ '<p style="color:#888">Turn-order compensation: seat 2 starts with +1.5 faith; seat 3 starts with +1 faith and an extra card.</p>',
 proT:"Prologue: Camel Bells",
 proB:"<p>Every sixty years, when the apricots bloom early, this oasis city on the old Silk Road hosts the Forum of the Three Teachings. Nobody draws a real sword here. They duel with sutras, manifestos and psalms. Lamas, revolutionaries and preachers trade arguments in the caravanserai, the bazaar and the great courtyard, and the townsfolk cheer whoever moves them most.</p><p>I am the forum's chronicler, and my ink is ready. This year, {me} has sent its youngest delegate: you.</p>",
 chT1:"Chapter 1: First Meeting at the Oasis",chR1:"Both opponents start with only 26 life",
@@ -415,7 +418,7 @@ endCoda:"End of the chronicle. In sixty years the apricots will bloom again.",
 loseB:"<p>Even a defeat is a teaching. The elders pour you another cup of tea and let you try again.</p>"
 },
 pt:{
-docTitle:"Trinity War · Três Doutrinas",htmlLang:"pt-PT",colon:": ",cardRef:"[{c}]",logo:"TRINITY WAR",sub:"Três Doutrinas · batalha de cartas a três",
+docTitle:"Trinity War · Três Doutrinas",htmlLang:"pt-PT",colon:": ",cardRef:"[{c}]",logo:"TRINITY WAR",cvt:"TRÊS|DOUTRINAS",langN:{zh:"Chinês",en:"Inglês",pt:"Português"},sub:"Três Doutrinas · batalha de cartas a três",
 trD:"{n} funções → 1 ataque",trRate:"{n} por 1",
 fac:{
  buddhism:{nm:"Budismo Tibetano",ult:"Nirvana",ultD:"Cura total, purifica, +7 escudo",why:"A vacuidade dissolve o apego",
@@ -462,7 +465,7 @@ rulesBody:'<p>Começas com <b>{SH}</b> carta (sempre um ataque) e compras 1 por 
  '<p>☸ vence ☭: {wB}<br>☭ vence ✝: {wC}<br>✝ vence ☸: {wX}</p><hr>'+
  '<p><b>Estados</b>: 🛡o escudo absorve primeiro · 🪨a armadura reduz cada golpe · 🔥a queimadura tira vida a cada turno · 🔒o bloqueio encarece os ataques do turno seguinte · 🔄os espinhos devolvem 40% do dano a quem ataca</p>'+
  '<p><b>Os três supremos:</b><br>{ultB}<br>{ultC}<br>{ultX}</p>'+
- '<p style="color:#888">Compensação de ordem: os lugares 2 e 3 começam com +1 fé; o lugar 3 começa também com uma carta extra.</p>',
+ '<p style="color:#888">Compensação de ordem: o lugar 2 começa com +1,5 de fé; o lugar 3 começa com +1 de fé e uma carta extra.</p>',
 proT:"Prólogo: Sinos de Camelo",
 proB:"<p>De sessenta em sessenta anos, quando os damasqueiros florescem cedo, esta cidade-oásis da antiga Rota da Seda acolhe o Fórum das Três Doutrinas. Aqui ninguém desembainha espadas a sério. O duelo faz-se com sutras, manifestos e salmos. Lamas, revolucionários e pregadores trocam argumentos no caravançarai, no bazar e no grande pátio, e o povo aplaude quem mais o comove.</p><p>Sou o cronista do fórum e tenho a tinta pronta. Este ano, {me} enviou o seu delegado mais jovem: tu.</p>",
 chT1:"Capítulo 1: Primeiro Encontro no Oásis",chR1:"Os dois adversários começam com apenas 26 de vida",
@@ -595,7 +598,7 @@ window.cycleLang=function(){var ls=["zh","en","pt"];setLang(ls[(ls.indexOf(LANG)
 // ───────── save (campaign) ─────────
 function freshSave(){return{v:SAVE_V,prog:{buddhism:0,communism:0,christianity:0},cf:"buddhism",pro:0}}
 function loadSave(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");
-  if(s&&typeof s==="object"){var d=freshSave();if(s.prog)Object.keys(d.prog).forEach(function(k){d.prog[k]=Math.max(0,Math.min(5,+s.prog[k]||0))});if(F[s.cf])d.cf=s.cf;d.pro=s.pro?1:0;return d}}catch(e){}
+  if(s&&typeof s==="object"){var d=freshSave();if(s.prog)Object.keys(d.prog).forEach(function(k){d.prog[k]=Math.max(0,Math.min(NCH,+s.prog[k]||0))});if(F[s.cf])d.cf=s.cf;d.pro=s.pro?1:0;return d}}catch(e){}
   return freshSave()}
 function saveSave(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}}
 var SV=loadSave();
@@ -606,6 +609,19 @@ function later(fn,ms){var g=GID;setTimeout(function(){if(g===GID)fn()},ms)}
 function blankS(ph){return{ph:ph||"select",ps:[],tn:0,rd:1,tgt:null,sel:null,log:[],win:null,res:"",busy:0,frN:0,dsc:0,atkN:0,zpop:"",tradeCnt:0,rules:0,spec:0,mod:{},camp:0,story:null,cx:"buddhism"}}
 var S=blankS();
 function aL(m){S.log=S.log.slice(-80);S.log.push(m)}
+// Log/story entries are stored as language-neutral data and translated when rendered, so switching
+// language re-translates everything already on screen. An entry is a string, an array of parts,
+// {k:key,o:params} (translation), {c:cardId} (card name) or {f:factionId} (faction name).
+var CB={};Object.keys(D).forEach(function(f){D[f].forEach(function(c){CB[c.id]=c})});
+function K(k,o){return o?{k:k,o:o}:{k:k}}
+function cR(c){return{c:c.id}}
+function fR(f){return{f:f}}
+function L(v){if(v===null||v===undefined)return"";if(typeof v!=="object")return String(v);
+  if(Array.isArray(v))return v.map(L).join("");
+  if(v.c!==undefined)return CB[v.c]?CB[v.c].nm:v.c;if(v.f!==undefined)return F[v.f]?F[v.f].nm:v.f;
+  if(v.z!==undefined)return CN[v.z]||v.z;
+  if(v.k!==undefined){var o=null;if(v.o){o={};Object.keys(v.o).forEach(function(n){o[n]=L(v.o[n])})}return t(v.k,o)}
+  return""}
 var AZ=function(p){var r=[];ZCATS.forEach(function(c){p[c].forEach(function(x){r.push(x)})});return r};
 
 function mkP(f,hu,i,o){o=o||{};var deck=shuf(D[f]),hand=[];
@@ -671,21 +687,21 @@ function doAtk(ps,ai,di,card,free){
   if(e==="shield"){a.shield=r1(a.shield+v);ex.push("🛡+"+v)}
   if(e==="faith"){addFaith(a,v);ex.push("🔮+"+v)}
   if(e==="draw"){var nd=Math.min(Math.floor(v),3);drawC(a,nd);ex.push("📜+"+nd)}
-  if(e==="revive"&&a.dis.length>0){var b=a.dis.filter(function(c){return c.cat==="A"&&c.id!==card.id}).sort(function(x,y){return(y.atk||0)-(x.atk||0)})[0];if(b){a.dis=a.dis.filter(function(c){return c.id!==b.id});a.hand.push(b);ex.push("♻"+b.nm)}}
-  if(e==="discard"&&d.hand.length>0){var ri=0|Math.random()*d.hand.length;var rm=d.hand.splice(ri,1)[0];d.dis.push(rm);ex.push("🗑"+rm.nm)}
+  if(e==="revive"&&a.dis.length>0){var b=a.dis.filter(function(c){return c.cat==="A"&&c.id!==card.id}).sort(function(x,y){return(y.atk||0)-(x.atk||0)})[0];if(b){a.dis=a.dis.filter(function(c){return c.id!==b.id});a.hand.push(b);ex.push(["♻",cR(b)])}}
+  if(e==="discard"&&d.hand.length>0){var ri=0|Math.random()*d.hand.length;var rm=d.hand.splice(ri,1)[0];d.dis.push(rm);ex.push(["🗑",cR(rm)])}
   if(e==="steal"){var s=r1(Math.min(v,d.hp));d.hp=r1(d.hp-s);heal(a,s);if(s>0)ex.push("💰"+s)}
-  if(e==="destroy"&&d.hand.length>0){var w=d.hand.slice().sort(function(x,y){return(x.cost||0)-(y.cost||0)})[0];d.hand=d.hand.filter(function(c){return c.id!==w.id});d.dis.push(w);ex.push("🔥"+w.nm)}
+  if(e==="destroy"&&d.hand.length>0){var w=d.hand.slice().sort(function(x,y){return(x.cost||0)-(y.cost||0)})[0];d.hand=d.hand.filter(function(c){return c.id!==w.id});d.dis.push(w);ex.push(["🔥",cR(w)])}
   if(e==="aoe"){ps.forEach(function(p){if(p.id!==a.id&&p.alive&&p.id!==d.id){p.hp=r1(Math.max(0,p.hp-v));ex.push("💥"+F[p.f].icon+"-"+v)}})}
   if(e==="reflect"){a.thorn=THORN;ex.push("🔄"+Math.round(THORN*100)+"%")}
   if(e==="lock"){d.locked=Math.max(d.locked,v||1);ex.push("🔒+"+(v||1))}
-  if(e==="chain"){ch=1;ex.push(t("exChain"))}
+  if(e==="chain"){ch=1;ex.push(K("exChain"))}
   if(e==="burn"){d.burn=r1(v);d.burnT=2;ex.push("🔥"+v+"×2")}
   if(e==="armor"){a.armor=r1(v);a.armorT=3;ex.push("🪨"+v)}
   if(e==="inspire"){a.inspired=r1(a.inspired+v);ex.push("📯+"+v)}
   if(e==="purify"){a.burn=0;a.burnT=0;a.locked=0;a.lockT=0;ex.push("✨")}
   if(ah>0)ex.push("☯+"+ah+"❤");
   ps.forEach(function(p){if(p.hp<=0)p.alive=0});
-  var msg=t("lgAtk",{i:af.icon,c:card.nm,cost:(free?"0":rc),adv:(hA?t("advUp"):hD?t("advDn"):""),ti:df.icon,dm:dm});
+  var msg=K("lgAtk",{i:af.icon,c:cR(card),cost:(free?"0":rc),adv:(hA?K("advUp"):hD?K("advDn"):""),ti:df.icon,dm:dm});
   return{msg:msg,ex:ex,ch:ch}}
 
 function dep(ps,pi,card){var p=ps[pi];p.faith=r1(Math.max(0,p.faith-card.cost));p.hand=p.hand.filter(function(c){return c.id!==card.id});p[card.cat].push(card)}
@@ -694,19 +710,19 @@ function doUlt(ps,i){var p=ps[i];p.inf=r1(p.inf-UC);var ex=[];
   if(p.f==="buddhism"){
     p.hp=p.mhp;p.burn=0;p.burnT=0;p.locked=0;p.lockT=0;
     p.shield=r1(p.shield+7);
-    ex.push(t("ultB"))}
+    ex.push(K("ultB"))}
   if(p.f==="communism"){
     ps.forEach(function(q){if(q.id!==p.id&&q.alive){
       q.hp=r1(Math.max(0,q.hp-2));
       ZCATS.forEach(function(cat){q[cat].forEach(function(c){q.dis.push(c)});q[cat]=[]});
       if(q.hp<=0)q.alive=0}});
-    ex.push(t("ultC"))}
+    ex.push(K("ultC"))}
   if(p.f==="christianity"){
     var rv=p.dis.filter(function(c){return c.cat==="A"}).sort(function(a,b){return(b.atk||0)-(a.atk||0)}).slice(0,3);
     rv.forEach(function(c){p.dis=p.dis.filter(function(x){return x.id!==c.id});p.hand.push(c)});
     ps.forEach(function(q){if(q.id!==p.id&&q.alive){q.burn=2;q.burnT=3}});
     p.faith=r1(p.faith+6);
-    ex.push(t("ultX",{n:rv.length}))}
+    ex.push(K("ultX",{n:rv.length}))}
   return ex}
 
 // ───────── AI ─────────
@@ -725,8 +741,8 @@ function aiTarget(ps,ai,card){var ts=ps.filter(function(p){return p.alive&&p.id!
     if(card&&estDmg(ai,q,card)>=q.hp)s+=4;s+=(1-q.hp/q.mhp)*1.5;if(s>bs){bs=s;best=q}});
   return best}
 function aiTurn(ps,idx){
-  var ai=ps[idx],af=F[ai.f];var logs=[t("lgAiTurn",{i:af.icon,f:af.nm})];
-  if(!doTS(ai)){logs.push(t("lgBurnDeath",{f:af.nm}));return logs}
+  var ai=ps[idx],af=F[ai.f];var logs=[K("lgAiTurn",{i:af.icon,f:fR(ai.f)})];
+  if(!doTS(ai)){logs.push(K("lgBurnDeath",{f:fR(ai.f)}));return logs}
   var useless=function(x){return x.cat!=="A"&&ai[x.cat].length>0&&(x.tier||0)<=(ai[x.cat][0].tier||0)};
   while(ai.hand.length>MH){var w=ai.hand.slice().sort(function(a,b){return(useless(b)-useless(a))||((a.cost||0)-(b.cost||0))})[0];ai.hand=ai.hand.filter(function(x){return x.id!==w.id});ai.dis.push(w)}
   // deploy: candidate list sorted by tier desc + cost asc, greedy
@@ -738,25 +754,25 @@ function aiTurn(ps,idx){
   moves.forEach(function(m){
     if(m.cost>ai.faith)return;
     if(!ai.hand.some(function(c){return c.id===m.card.id}))return;
-    if(m.type==='D'){if(ai[m.cat].length>0)return;dep(ps,idx,m.card);logs.push("  "+t("lgDeploy",{z:CN[m.cat],c:m.card.nm}))}
+    if(m.type==='D'){if(ai[m.cat].length>0)return;dep(ps,idx,m.card);logs.push(["  ",K("lgDeploy",{z:{z:m.cat},c:cR(m.card)})])}
     else{var cur=ai[m.cat][0];if(!cur||(m.card.tier||0)<=(cur.tier||0))return;
-      ai[m.cat]=[];ai.dis.push(cur);dep(ps,idx,m.card);logs.push("  "+t("lgUpg",{z:CN[m.cat],a:cur.nm,b:m.card.nm}))}});
+      ai[m.cat]=[];ai.dis.push(cur);dep(ps,idx,m.card);logs.push(["  ",K("lgUpg",{z:{z:m.cat},a:cR(cur),b:cR(m.card)})])}});
   // trade leftover function cards
   var fnHand=ai.hand.filter(useless);var tr=getTradeRate(ai);
   while(fnHand.length>=tr&&ai.inf>=TRADE_COST){
     for(var i=0;i<tr;i++){var c=fnHand.shift();ai.hand=ai.hand.filter(function(x){return x.id!==c.id});ai.dis.push(c)}
     ai.inf=r1(ai.inf-TRADE_COST);var got=drawAttack(ai);
-    if(got)logs.push(t("aiTrade",{n:tr,c:got.nm}));
+    if(got)logs.push(K("aiTrade",{n:tr,c:cR(got)}));
     fnHand=ai.hand.filter(useless)}
-  if(aiWantsUlt(ps,ai)){doUlt(ps,idx).forEach(function(e){logs.push("  ⭐"+e)})}
+  if(aiWantsUlt(ps,ai)){doUlt(ps,idx).forEach(function(e){logs.push(["  ⭐",e])})}
   var free=0,pl=0;
   while(pl<MAXATK){if(!ai.alive)break;
     var af2=ai.hand.filter(function(x){return x.cat==="A"&&(free||aCost(ai,x)<=ai.faith)});if(!af2.length)break;
     var pk=af2.sort(function(a,b){return aiScore(ai,b)-aiScore(ai,a)})[0];
     var tg=aiTarget(ps,ai,pk);if(!tg)break;
     var r=doAtk(ps,idx,ps.indexOf(tg),pk,free);
-    logs.push("  "+r.msg);r.ex.forEach(function(e){logs.push("    "+e)});
-    ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;logs.push(t("lgElim",{f:F[p.f].nm}))}});
+    logs.push(["  ",r.msg]);r.ex.forEach(function(e){logs.push(["    ",e])});
+    ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;logs.push(K("lgElim",{f:fR(p.f)}))}});
     free=r.ch;pl++;if(!r.ch&&ai.faith<1)break}
   return logs}
 
@@ -766,16 +782,16 @@ function checkEnd(){var al=S.ps.filter(function(p){return p.alive});var me=S.spe
     S.win=al.length===1?al[0]:null;
     S.res=S.spec?"spec":(al.length===0?"draw":(me.alive?"win":"lose"));
     S.ph="gameover";S.busy=0;S.sel=null;
-    aL(S.win?t("lgWin",{f:F[S.win.f].nm}):(S.res==="lose"?t("lgLose"):"☯"));
+    aL(S.win?K("lgWin",{f:fR(S.win.f)}):(S.res==="lose"?K("lgLose"):"☯"));
     if(S.camp&&S.res==="win"){var f=S.ps[0].f;SV.prog[f]=Math.max(SV.prog[f],S.camp);saveSave()}
     render();return 1}return 0}
 function beginHuman(p){
-  if(!doTS(p)){aL(t("lgBurnDeath",{f:F[p.f].nm}));if(!checkEnd())advance(p.id);return}
+  if(!doTS(p)){aL(K("lgBurnDeath",{f:fR(p.f)}));if(!checkEnd())advance(p.id);return}
   S.ph="play";S.sel=null;S.busy=0;S.frN=0;S.atkN=0;S.tradeCnt=0;
   if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();
   var nd=p.hand.length-MH;S.dsc=nd>0?nd:0;
-  aL(nd>0?t("lgRoundDsc",{r:S.rd,n:nd}):t("lgRound",{r:S.rd}));
-  if(p.lockT)aL(t("lgLocked",{n:p.lockT}));render()}
+  aL(nd>0?K("lgRoundDsc",{r:S.rd,n:nd}):K("lgRound",{r:S.rd}));
+  if(p.lockT)aL(K("lgLocked",{n:p.lockT}));render()}
 function autoTgt(){var ens=S.ps.filter(function(p){return!p.hu&&p.alive});if(ens.length===1)S.tgt=ens[0].id}
 function advance(from){if(checkEnd())return;
   var nx=(from+1)%3,sf=0;while(!S.ps[nx].alive&&sf<3){nx=(nx+1)%3;sf++}
@@ -787,44 +803,44 @@ function advance(from){if(checkEnd())return;
 function newMatch(order,hu,cfg){GID++;var o=S.cx;S=blankS("play");S.cx=o;S.ps=mkPlayers(order,hu,cfg);S.spec=hu<0?1:0;
   if(cfg){S.mod=cfg.mod||{};S.camp=cfg.n}}
 window.startGame=function(fid){var oth=Object.keys(F).filter(function(x){return x!==fid});
-  newMatch([fid,oth[0],oth[1]],0,null);aL(t("lgStart"));beginHuman(S.ps[0])};
-window.startSpec=function(){newMatch(shuf(Object.keys(F)),-1,null);S.busy=1;aL(t("lgSpec"));render();
+  newMatch([fid,oth[0],oth[1]],0,null);aL(K("lgStart"));beginHuman(S.ps[0])};
+window.startSpec=function(){newMatch(shuf(Object.keys(F)),-1,null);S.busy=1;aL(K("lgSpec"));render();
   later(function(){var logs=aiTurn(S.ps,0);logs.forEach(aL);render();later(function(){advance(0)},600)},400)};
 
 // ───────── human actions ─────────
 function myTurn(){return S.ph==="play"&&!S.spec&&S.tn===0&&S.ps[0].alive&&!S.busy}
 window.sc=function(cid){if(!myTurn())return;var me=S.ps[0],c=null;me.hand.forEach(function(x){if(x.id===cid)c=x});if(!c)return;
-  if(S.dsc>0){me.hand=me.hand.filter(function(x){return x.id!==cid});me.dis.push(c);S.dsc--;aL(t("lgDsc",{c:c.nm})+(S.dsc>0?t("lgDscMore",{n:S.dsc}):""));if(S.dsc<=0)aL(t("lgDscDone"));render();return}
+  if(S.dsc>0){me.hand=me.hand.filter(function(x){return x.id!==cid});me.dis.push(c);S.dsc--;aL([K("lgDsc",{c:cR(c)}),(S.dsc>0?K("lgDscMore",{n:S.dsc}):"")]);if(S.dsc<=0)aL(K("lgDscDone"));render();return}
   S.sel=(S.sel&&S.sel.id===cid)?null:c;S.zpop="";if(S.sel&&S.sel.cat==="A")autoTgt();render()};
 window.st=function(pid){if(!myTurn()||S.dsc>0)return;var p=S.ps[pid];if(!p||!p.alive||p.hu)return;S.tgt=(S.tgt===pid)?null:pid;render()};
 window.tradeCard=function(){if(!myTurn()||!S.sel||S.dsc>0||S.sel.cat==="A")return;
   var me=S.ps[0],c=S.sel,need=getTradeRate(me);
-  if(me.inf<TRADE_COST){aL(t("lgTradeNoInf",{c:TRADE_COST}));render();return}
+  if(me.inf<TRADE_COST){aL(K("lgTradeNoInf",{c:TRADE_COST}));render();return}
   me.hand=me.hand.filter(function(x){return x.id!==c.id});me.dis.push(c);
   S.tradeCnt++;S.sel=null;
   if(S.tradeCnt>=need){me.inf=r1(me.inf-TRADE_COST);S.tradeCnt=0;
-    var got=drawAttack(me);aL(t("lgTradeDone",{c:TRADE_COST,r:got?t("cardRef",{c:got.nm}):t("lgTradeNone")}))}
-  else aL(t("lgTradeAdd",{c:c.nm,a:S.tradeCnt,b:need,n:need-S.tradeCnt}));
+    var got=drawAttack(me);aL(K("lgTradeDone",{c:TRADE_COST,r:got?K("cardRef",{c:cR(got)}):K("lgTradeNone")}))}
+  else aL(K("lgTradeAdd",{c:cR(c),a:S.tradeCnt,b:need,n:need-S.tradeCnt}));
   render()};
-window.discardSel=function(){if(!myTurn()||!S.sel||S.dsc>0)return;var me=S.ps[0],c=S.sel;me.hand=me.hand.filter(function(x){return x.id!==c.id});me.dis.push(c);aL(t("lgDiscard",{c:c.nm}));S.sel=null;render()};
+window.discardSel=function(){if(!myTurn()||!S.sel||S.dsc>0)return;var me=S.ps[0],c=S.sel;me.hand=me.hand.filter(function(x){return x.id!==c.id});me.dis.push(c);aL(K("lgDiscard",{c:cR(c)}));S.sel=null;render()};
 window.pc=function(){if(!myTurn()||!S.sel||S.dsc>0)return;var me=S.ps[0];
-  if(S.sel.cat==="A"){if(S.tgt===null||!S.ps[S.tgt].alive){aL(t("lgPickTgt"));render();return}
-    if(S.atkN>=MAXATK){aL(t("lgMaxAtk",{n:MAXATK}));render();return}
-    var co=S.frN?0:aCost(me,S.sel);if(co>me.faith){aL(t("lgNoFaith"));render();return}
-    var r=doAtk(S.ps,0,S.tgt,S.sel,S.frN);aL(r.msg);r.ex.forEach(function(e){aL("  "+e)});
-    S.ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;aL(t("lgElim",{f:F[p.f].nm}))}});
+  if(S.sel.cat==="A"){if(S.tgt===null||!S.ps[S.tgt].alive){aL(K("lgPickTgt"));render();return}
+    if(S.atkN>=MAXATK){aL(K("lgMaxAtk",{n:MAXATK}));render();return}
+    var co=S.frN?0:aCost(me,S.sel);if(co>me.faith){aL(K("lgNoFaith"));render();return}
+    var r=doAtk(S.ps,0,S.tgt,S.sel,S.frN);aL(r.msg);r.ex.forEach(function(e){aL(["  ",e])});
+    S.ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;aL(K("lgElim",{f:fR(p.f)}))}});
     S.sel=null;S.frN=r.ch;S.atkN++;if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();if(checkEnd())return;
   }else{var cat=S.sel.cat;
     if(me[cat].length>=ZM[cat]){var old=me[cat][0];
-      if(S.sel.tier&&old.tier&&S.sel.tier>old.tier){if(S.sel.cost>me.faith){aL(t("lgNoFaith"));render();return}
-        me[cat]=[];me.dis.push(old);aL(t("lgUpg",{z:CN[cat],a:old.nm,b:S.sel.nm}));dep(S.ps,0,S.sel);S.sel=null;render();return;
-      }else{aL(t("lgNoReplace"));render();return}}
-    if(S.sel.cost>me.faith){aL(t("lgNoFaith"));render();return}
-    aL(t("lgDeploy",{z:CN[cat],c:S.sel.nm}));dep(S.ps,0,S.sel);S.sel=null}render()};
-window.et=function(){if(!myTurn()||S.dsc>0)return;aL(t("lgEnd"));S.busy=1;S.sel=null;S.tradeCnt=0;render();later(function(){advance(0)},150)};
-window.rz=function(cat,cid){if(!myTurn())return;var me=S.ps[0],c=null;me[cat].forEach(function(x){if(x.id===cid)c=x});me[cat]=me[cat].filter(function(x){return x.id!==cid});if(c){me.dis.push(c);aL(t("lgWithdraw",{c:c.nm}))}S.zpop="";render()};
-window.uu=function(){if(!myTurn()||S.dsc>0)return;if(S.ps[0].inf<UC)return;doUlt(S.ps,0).forEach(function(e){aL("⭐"+e)});
-  S.ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;aL(t("lgElim",{f:F[p.f].nm}))}});if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();if(checkEnd())return;render()};
+      if(S.sel.tier&&old.tier&&S.sel.tier>old.tier){if(S.sel.cost>me.faith){aL(K("lgNoFaith"));render();return}
+        me[cat]=[];me.dis.push(old);aL(K("lgUpg",{z:{z:cat},a:cR(old),b:cR(S.sel)}));dep(S.ps,0,S.sel);S.sel=null;render();return;
+      }else{aL(K("lgNoReplace"));render();return}}
+    if(S.sel.cost>me.faith){aL(K("lgNoFaith"));render();return}
+    aL(K("lgDeploy",{z:{z:cat},c:cR(S.sel)}));dep(S.ps,0,S.sel);S.sel=null}render()};
+window.et=function(){if(!myTurn()||S.dsc>0)return;aL(K("lgEnd"));S.busy=1;S.sel=null;S.tradeCnt=0;render();later(function(){advance(0)},150)};
+window.rz=function(cat,cid){if(!myTurn())return;var me=S.ps[0],c=null;me[cat].forEach(function(x){if(x.id===cid)c=x});me[cat]=me[cat].filter(function(x){return x.id!==cid});if(c){me.dis.push(c);aL(K("lgWithdraw",{c:cR(c)}))}S.zpop="";render()};
+window.uu=function(){if(!myTurn()||S.dsc>0)return;if(S.ps[0].inf<UC)return;doUlt(S.ps,0).forEach(function(e){aL(["⭐",e])});
+  S.ps.forEach(function(p){if(!p.alive&&!p._dl){p._dl=1;aL(K("lgElim",{f:fR(p.f)}))}});if(S.tgt!==null&&!S.ps[S.tgt].alive)S.tgt=null;autoTgt();if(checkEnd())return;render()};
 window.zp=function(cat){S.zpop=S.zpop===cat?"":cat;render()};
 window.showRules=function(){S.rules=1;render()};
 window.hideRules=function(){S.rules=0;render()};
@@ -837,22 +853,22 @@ var CH=[
  {n:3,foe:{cards:2},me:{cards:2,faith:1},mod:{im:2}},
  {n:4,foe:{},me:{shield:12,faith:1,deploy:[["G",1]]},mod:{focus:1}},
  {n:5,foe:{hp:44,deploy:[["E",1],["G",1]]},me:{deploy:[["K",1],["E",1]]},mod:{}}];
-function stx(k){return t(k,{me:F[SV.cf].nm})}
+function stx(k,f){return K(k,{me:fR(f||SV.cf)})}
 function story(title,body,btn,act){S.story={title:title,body:body,btn:btn,act:act};render()}
 window.storyGo=function(){var a=S.story&&S.story.act;S.story=null;if(a)a();else render()};
 window.openCamp=function(){GID++;var o=S.cx;S=blankS("camp");S.cx=o;
-  if(!SV.pro){SV.pro=1;saveSave();story(t("proT"),stx("proB"),t("btnBegin"),null)}else render()};
+  if(!SV.pro){SV.pro=1;saveSave();story(K("proT"),stx("proB"),K("btnBegin"),null)}else render()};
 window.campFac=function(f){if(!F[f])return;SV.cf=f;saveSave();render()};
-window.campPro=function(){story(t("proT"),stx("proB"),t("btnBack"),null)};
+window.campPro=function(){story(K("proT"),stx("proB"),K("btnBack"),null)};
 window.campPlay=function(n){var f=SV.cf;if(n>SV.prog[f]+1)return;
-  story(t("chT"+n),stx("chI"+n)+'<p class="rule">'+t("ruleLbl")+t("chR"+n)+'</p>',t("btnFight"),function(){startChapter(n)})};
+  story(K("chT"+n),[stx("chI"+n),'<p class="rule">',K("ruleLbl"),K("chR"+n),'</p>'],K("btnFight"),function(){startChapter(n)})};
 function startChapter(n){var f=SV.cf,ch=CH[n-1],oth=Object.keys(F).filter(function(x){return x!==f});
-  newMatch([f,oth[0],oth[1]],0,ch);aL(t("chT"+n));aL(t("ruleLbl")+t("chR"+n));beginHuman(S.ps[0])}
+  newMatch([f,oth[0],oth[1]],0,ch);aL(K("chT"+n));aL([K("ruleLbl"),K("chR"+n)]);beginHuman(S.ps[0])}
 window.campAfter=function(){var n=S.camp,f=S.ps[0].f;
-  if(S.res==="win"){story(t("chT"+n),stx("chO"+n),n<5?t("btnNext"):t("btnEnding"),function(){
-      if(n<5){openCamp()}else story(t("endT"),stx("end_"+f)+'<p class="coda">'+t("endCoda")+'</p>',t("btnBack"),function(){openCamp()})})}
-  else story(t("chT"+n),t("loseB"),t("btnRetry"),function(){startChapter(n)})};
-window.campEnding=function(f){story(t("endT"),t("end_"+f,{me:F[f].nm})+'<p class="coda">'+t("endCoda")+'</p>',t("btnBack"),null)};
+  if(S.res==="win"){story(K("chT"+n),stx("chO"+n,f),n<CH.length?K("btnNext"):K("btnEnding"),function(){
+      if(n<CH.length){openCamp()}else story(K("endT"),[stx("end_"+f,f),'<p class="coda">',K("endCoda"),'</p>'],K("btnBack"),function(){openCamp()})})}
+  else story(K("chT"+n),K("loseB"),K("btnRetry"),function(){startChapter(n)})};
+window.campEnding=function(f){story(K("endT"),[stx("end_"+f,f),'<p class="coda">',K("endCoda"),'</p>'],K("btnBack"),null)};
 window.campReset=function(){if(!confirm(t("resetQ")))return;SV.prog[SV.cf]=0;saveSave();render()};
 
 // ───────── codex ─────────
@@ -863,11 +879,11 @@ window.cxFac=function(f){S.cx=f;render()};
 function tierTag(c){if(!c.tier)return'';return'<span class="tier" style="color:'+TC[c.tier]+';background:'+TC[c.tier]+'18">'+TN[c.tier]+'</span>'}
 function pvDisp(c){if(c.pv.t==="tr")return t("trRate",{n:c.pv.v});return"+"+c.pv.v}
 function fxText(c){var s=FXD[c.fx]||"";return s.replace(/\{v\}/g,c.fx==="lock"?(c.fv||1):c.fv)}
-function langBar(){var N={zh:"中文",en:"English",pt:"Português"};return'<div class="langs">'+["zh","en","pt"].map(function(l){return'<button class="lg'+(LANG===l?' on':'')+'" onclick="setLang(\''+l+'\')">'+N[l]+'</button>'}).join('')+'</div>'}
+function langBar(){var N=I18N[LANG].langN;return'<div class="langs">'+["zh","en","pt"].map(function(l){return'<button class="lg'+(LANG===l?' on':'')+'" lang="'+I18N[l].htmlLang+'" aria-pressed="'+(LANG===l)+'" onclick="setLang(\''+l+'\')">'+N[l]+'</button>'}).join('')+'</div>'}
 function rr(p,s){var ia=r1(gInfAmp(p)*100);var idr=gInfDR(p);var it=[];if(ia>0)it.push('+'+ia+'%');if(idr>0)it.push('⬇'+idr);
   return'<div class="stats'+(s?' sm':'')+'"><span style="color:#f66">❤'+r1(p.hp)+'</span><span style="color:#a78bfa">🔮'+r1(p.faith)+'</span><span style="color:#fbbf24">⭐'+r1(p.inf)+'/'+UC+(it.length?' <span style="opacity:.6">('+it.join(' ')+')</span>':'')+'</span>'+(p.shield>0?'<span style="color:#4af">🛡'+r1(p.shield)+'</span>':'')+(p.armor>0?'<span style="color:#ccc">🪨'+r1(p.armor)+'</span>':'')+(p.burn>0?'<span style="color:#ef4444">🔥'+r1(p.burn)+'×'+p.burnT+'</span>':'')+(p.locked>0||p.lockT>0?'<span style="color:#f9a">🔒'+(p.lockT||p.locked)+'</span>':'')+(p.thorn>0?'<span style="color:#7dd">🔄</span>':'')+'</div>'}
 function logColor(l){return l.indexOf("⚠")>=0||l.indexOf("❌")>=0?"#f66":l.indexOf("──")===0?"#888":l.indexOf("💀")>=0||l.indexOf("🏆")>=0||l.indexOf("⭐")>=0?"#fbbf24":l.indexOf("▲")>=0||l.indexOf("⬆")>=0?"#4f4":l.indexOf("🔄")>=0?"#4fc3f7":"#ccc"}
-function rLog(){var h='<div id="lb" class="log">';S.log.forEach(function(l){h+='<div style="color:'+logColor(l)+'">'+l+'</div>'});return h+'</div>'}
+function rLog(){var h='<div id="lb" class="log">';S.log.forEach(function(e){var l=L(e);h+='<div style="color:'+logColor(l)+'">'+l+'</div>'});return h+'</div>'}
 
 function render(){var a=document.getElementById("app");var h;
   if(S.ph==="select")h=rSel();
@@ -895,7 +911,8 @@ function rSpec(){
     h+='</div>'});
   h+='</div>'+rLog()+'</div>';return h}
 
-function cover(){return'<div class="cover"><img alt="" src="'+COVER_SRC+'"><div class="cvt"><div>三</div><div>教</div><div>鼎</div><div>立</div></div></div>'}
+function cover(){var w=t("cvt").split("|");
+  return'<div class="cover"><img alt="" src="'+COVER_SRC+'"><div class="cvt'+(LANG==="zh"?'':' lat')+'">'+w.map(function(x){return'<div class="cvc">'+x+'</div>'}).join('')+'</div></div>'}
 function rSel(){
   var fb=Object.keys(F).map(function(k){var f=F[k];return'<button class="fb" style="border-color:'+f.c+';background:'+f.bg+'" onclick="startGame(\''+k+'\')"><span style="font-size:32px">'+f.icon+'</span><span class="fbn" style="color:'+f.c+'">'+f.nm+'</span><span class="fbu" style="color:'+f.c+'">⭐'+f.ult+'</span><span class="fbd">'+f.ultD+'</span><span class="fbd" style="color:#777;margin-top:2px">'+t("beatsShort",{a:F[f.beats].icon,b:F[f.loses].icon})+'</span></button>'}).join("");
   return'<div class="sel">'+langBar()+'<div class="logo">'+t("logo")+'</div><div class="sub">'+t("sub")+'</div>'+cover()+
@@ -917,15 +934,15 @@ function rRules(){
       wB:F.buddhism.why,wC:F.communism.why,wX:F.christianity.why})+
     '</div><div style="text-align:center"><button class="cb" onclick="hideRules()">'+t("close")+'</button></div></div></div>'}
 
-function rStory(){var s=S.story;return'<div class="ov"><div class="ovb story"><div class="h">'+s.title+'</div><div class="sbody">'+s.body+'</div><div style="text-align:center"><button class="mb" style="background:linear-gradient(135deg,#c0841a,#7a1f1f)" onclick="storyGo()">'+s.btn+'</button></div></div></div>'}
+function rStory(){var s=S.story;return'<div class="ov"><div class="ovb story"><div class="h">'+L(s.title)+'</div><div class="sbody">'+L(s.body)+'</div><div style="text-align:center"><button class="mb" style="background:linear-gradient(135deg,#c0841a,#7a1f1f)" onclick="storyGo()">'+L(s.btn)+'</button></div></div></div>'}
 
 function rCamp(){var f=SV.cf,pg=SV.prog[f];
   var h='<div class="sel">'+langBar()+'<div class="logo" style="font-size:20px;letter-spacing:1px">'+t("campaign")+'</div><div class="sub">'+t("campSub")+'</div>';
-  h+='<div class="tabs">'+Object.keys(F).map(function(k){var x=F[k];return'<button class="tab'+(k===f?' on':'')+'" style="border-color:'+x.c+(k===f?';background:'+x.c+'33':'')+'" onclick="campFac(\''+k+'\')">'+x.icon+' '+x.nm+' <span style="opacity:.7">'+SV.prog[k]+'/5</span></button>'}).join('')+'</div>';
+  h+='<div class="tabs">'+Object.keys(F).map(function(k){var x=F[k];return'<button class="tab'+(k===f?' on':'')+'" style="border-color:'+x.c+(k===f?';background:'+x.c+'33':'')+'" onclick="campFac(\''+k+'\')">'+x.icon+' '+x.nm+' <span style="opacity:.7">'+SV.prog[k]+'/'+CH.length+'</span></button>'}).join('')+'</div>';
   h+='<div class="chs"><button class="chb" onclick="campPro()"><b>'+t("proT")+'</b><span>'+t("proS")+'</span></button>';
   CH.forEach(function(c){var n=c.n,lk=n>pg+1,dn=n<=pg;
     h+='<button class="chb'+(lk?' lk':'')+'" '+(lk?'disabled':'onclick="campPlay('+n+')"')+'><b>'+(dn?'✅ ':lk?'🔒 ':'▶ ')+t("chT"+n)+'</b><span>'+t("chR"+n)+'</span></button>'});
-  if(pg>=5)h+='<button class="chb" style="border-color:'+F[f].c+'" onclick="campEnding(\''+f+'\')"><b>🏆 '+t("endT")+'</b><span>'+F[f].nm+'</span></button>';
+  if(pg>=CH.length)h+='<button class="chb" style="border-color:'+F[f].c+'" onclick="campEnding(\''+f+'\')"><b>🏆 '+t("endT")+'</b><span>'+F[f].nm+'</span></button>';
   h+='</div><div class="menu"><button class="mb" style="background:#fff1;color:#aaa" onclick="restart()">'+t("btnMenu")+'</button>'+(pg>0?'<button class="mb" style="background:#3a1010;color:#f99" onclick="campReset()">'+t("btnReset")+'</button>':'')+'</div></div>';
   return h}
 

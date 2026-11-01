@@ -27,7 +27,7 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 - 五类**功能牌**（装备/伟人/信条/组织/经典），各 3 档，每类只能部署 1 张：分别提供攻击力、减伤、换牌率、⭐影响/回合、🔮信仰/回合。Five kinds of **function cards** (Gear, Sage, Creed, Order, Scripture), 3 tiers each, one per zone.
 - ⭐影响满 10 可放大招：☸涅槃（回满血+净化+护盾）、☭批斗（全敌-2 并拆光功能牌）、✝审判（复活 3 张攻击牌+全场灼烧+信仰）。At 10 influence, unleash your ultimate: Nirvana, Class Struggle or Judgement.
 - 克制关系：☸ 克 ☭ 克 ✝ 克 ☸（伤害 ×1.2，并回血、加信仰）。Counters: ☸ beats ☭ beats ✝ beats ☸.
-- 后手补偿：第 2、3 位起始 +1 信仰，第 3 位多 1 张起手牌。Later seats get +1 starting faith; seat 3 also gets an extra card.
+- 后手补偿：第 2 位起始 +1.5 信仰；第 3 位起始 +1 信仰并多 1 张起手牌。Seat 2 starts with +1.5 faith; seat 3 starts with +1 faith and an extra card.
 
 完整规则见游戏内「📖 游戏规则」。The full rules are in the in-game Rules screen.
 
