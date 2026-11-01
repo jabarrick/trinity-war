@@ -26,16 +26,20 @@ async function run(){
         if(r.lang!=="zh"){const m=r.t.match(/.{0,20}[　-〿㐀-䶿一-鿿豈-﫿＀-￯].{0,20}/);if(m)bad(tag+" "+where+": CJK in "+r.lang+" UI: "+m[0].replace(/\n/g," "))}
         if(r.ow)bad(tag+" "+where+": horizontal overflow");
       };
+      // phone: every tappable thing should be at least 34px tall and 34px wide
+      const targets=async where=>{if(vn!=="mobile")return;
+        const sm=await page.evaluate(()=>[...document.querySelectorAll("button,[onclick]")].filter(e=>{const b=e.getBoundingClientRect();return b.width>0&&(b.height<34||b.width<34)}).map(e=>(e.className||e.tagName)+" "+Math.round(e.getBoundingClientRect().width)+"x"+Math.round(e.getBoundingClientRect().height)));
+        if(sm.length)bad(tag+" "+where+": small tap targets "+[...new Set(sm)].slice(0,5).join(", "))};
       const shot=async n=>{await page.screenshot({path:path.join(OUT,tag+"-"+n+".png")})};
       await page.goto(URL);await page.waitForTimeout(200);
-      await check("title");await shot("1-title");
+      await check("title");await targets("title");await shot("1-title");
       await tap("text=/📖/");await page.waitForTimeout(100);await check("rules");await shot("2-rules");
       await tap(".ov .cb");
       await tap("text=/📚/");await check("codex");await shot("3-codex");
       for(const i of [1,2]){await tap(".tabs .tab >> nth="+i);await check("codex"+i)}
       await tap(".menu .mb");
       await tap("text=/🐪/");await page.waitForTimeout(100);await check("prologue");await shot("4-prologue");
-      await tap(".ov .mb");await check("camp");await shot("5-camp");
+      await tap(".ov .mb");await check("camp");await targets("camp");await shot("5-camp");
       await tap(".chb >> nth=1");await check("ch1-intro");await shot("6-ch1");
       await tap(".ov .mb");await page.waitForTimeout(200);await check("ch1-game");
       // unlock everything: chapters 6/7 and the epilogue
@@ -65,8 +69,12 @@ async function run(){
         if(fn){await tap('.card[onclick*="\''+fn.id+'\'"]');await tap(".act .ab >> nth=0");continue}
         if(atk&&st.atkN<3){await tap('.card[onclick*="\''+atk.id+'\'"]');
           const s2=await page.evaluate(()=>S.tgt);if(s2===null)await tap(".en >> nth="+(Math.random()<.5?0:1));
-          await check("selected");if(turns===1)await shot("7-selected");
-          await tap(".act .ab >> nth=0");continue}
+          await check("selected");await targets("game");if(turns===1)await shot("7-selected");
+          // alternate between the play button and "tap the card again"
+          if(turns%2){const n0=await page.evaluate(()=>S.atkN);await tap('.card[onclick*="\''+atk.id+'\'"]');
+            const n1=await page.evaluate(()=>S.ph!=="play"?99:S.atkN);if(n1<=n0)bad(tag+" tap-again did not play the card")}
+          else await tap(".act .ab >> nth=0");
+          if(turns===2)await shot("7c-hitfx");continue}
         await tap("text=/⏭/");turns++;
         if(turns===3&&!switched){switched=1;
           // switch language mid-game via 🌐 three times and check the log every time

@@ -33,12 +33,18 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 
 ## 平衡 / Balance
 
-数值用无界面的 AI 对 AI 模拟调过（每次 2–3 万局，座位随机）：
+数值用无界面的 AI 对 AI 模拟器调过（`node tools/sim.js`，座位随机）。The numbers are tuned with a headless AI-vs-AI simulator (`node tools/sim.js`, random seats).
 
-| | ☸ 藏传佛教 | ☭ 共产主义 | ✝ 基督教 | 座位 1 / 2 / 3 |
+| 快速对战 / Quick match | ☸ 藏传佛教 | ☭ 共产主义 | ✝ 基督教 | 座位 1 / 2 / 3 |
 |---|---|---|---|---|
-| 改动前 / before | 32.4% | 33.0% | 34.4% | 37.2% / 32.7% / 29.8% |
-| 改动后 / after | 32.6% | 34.1% | 33.3% | 34.0% / 32.8% / 33.2% |
+| 旧版 / previous (3 万局) | 32.5% | 34.8% | 32.7% | 34.1% / 31.9% / 34.0% |
+| 现版 / current (10 万局) | 33.2% | 33.1% | 33.7% | 33.4% / 33.1% / 33.6% |
+
+故事模式难度用 AI 代替玩家估算（每章每阵营 3000 局）。Story difficulty is estimated with an AI standing in for the player (3,000 games per chapter per side):
+
+| 章 / Chapter | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| 胜率 / win rate | 69.5% | 60.9% | 52.4% | 43.9% | 34.7% | 32.0% | 30.7% |
 
 ## 关于题材 / About the theme
 
@@ -46,4 +52,4 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 
 ## 开发 / Development
 
-没有构建步骤：所有代码、样式和封面图都内嵌在 `index.html` 里。推送到 `main` 后，`.github/workflows/pages.yml` 会自动部署到 GitHub Pages。There is no build step: code, styles and the cover image are all inlined in `index.html`. Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
+没有构建步骤：所有代码、样式和封面图都内嵌在 `index.html` 里。推送到 `main` 后，`.github/workflows/pages.yml` 会自动部署到 GitHub Pages。测试工具见 [`tools/`](tools/README.md)。There is no build step: code, styles and the cover image are all inlined in `index.html`. Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
