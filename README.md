@@ -16,29 +16,35 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 | 模式 | Mode | 说明 / Notes |
 |---|---|---|
 | ⚔ 快速对战 | Quick match | 选一个阵营，对战两个 AI。Pick a side and face two AIs. |
-| 🐪 丝路论道 | Silk Road Forum (story) | 序章 + 5 章 + 每个阵营各自的尾声。每章有独特规则，进度按阵营分别保存。Prologue, 5 chapters with special rules, and an epilogue for each side. Progress is saved per side. |
+| 🐪 丝路论道 | Silk Road Forum (story) | 序章 + 7 章 + 每个阵营各自的尾声。每章有独特规则，难度从第 1 章约 70% 胜率逐步降到第 7 章约 30%，进度按阵营分别保存。Prologue, 7 chapters with special rules (difficulty goes from about 70% win rate in chapter 1 down to about 30% in chapter 7), and an epilogue for each side. Progress is saved per side. |
 | 📚 图鉴 | Codex | 阵营典故与全部卡牌说明。Lore for each side and the full card list with effect explanations. |
 | 👁 观战 | Spectate | 三个 AI 互相对战。Watch three AIs play. |
 
 ### 规则速览 / Rules in brief
 
 - 每方 40 生命；起手 1 张攻击牌，每回合抽 1 张，手牌上限 6。Life 40; you start with 1 attack card, draw 1 per turn, hand limit 6.
-- **攻击牌**（每方 24 张）消耗 🔮信仰，每回合最多 3 张。**Attack cards** (24 per side) cost faith; at most 3 per turn.
+- **攻击牌**（每方 26 张）消耗 🔮信仰，每回合最多 3 张。**Attack cards** (24 per side) cost faith; at most 3 per turn.
 - 五类**功能牌**（装备/伟人/信条/组织/经典），各 3 档，每类只能部署 1 张：分别提供攻击力、减伤、换牌率、⭐影响/回合、🔮信仰/回合。Five kinds of **function cards** (Gear, Sage, Creed, Order, Scripture), 3 tiers each, one per zone.
 - ⭐影响满 10 可放大招：☸涅槃（回满血+净化+护盾）、☭批斗（全敌-2 并拆光功能牌）、✝审判（复活 3 张攻击牌+全场灼烧+信仰）。At 10 influence, unleash your ultimate: Nirvana, Class Struggle or Judgement.
 - 克制关系：☸ 克 ☭ 克 ✝ 克 ☸（伤害 ×1.2，并回血、加信仰）。Counters: ☸ beats ☭ beats ✝ beats ☸.
-- 后手补偿：第 2、3 位起始 +1 信仰，第 3 位多 1 张起手牌。Later seats get +1 starting faith; seat 3 also gets an extra card.
+- 后手补偿：第 2 位起始 +1.5 信仰；第 3 位起始 +1 信仰并多 1 张起手牌。Seat 2 starts with +1.5 faith; seat 3 starts with +1 faith and an extra card.
 
 完整规则见游戏内「📖 游戏规则」。The full rules are in the in-game Rules screen.
 
 ## 平衡 / Balance
 
-数值用无界面的 AI 对 AI 模拟调过（每次 2–3 万局，座位随机）：
+数值用无界面的 AI 对 AI 模拟器调过（`node tools/sim.js`，座位随机）。The numbers are tuned with a headless AI-vs-AI simulator (`node tools/sim.js`, random seats).
 
-| | ☸ 藏传佛教 | ☭ 共产主义 | ✝ 基督教 | 座位 1 / 2 / 3 |
+| 快速对战 / Quick match | ☸ 藏传佛教 | ☭ 共产主义 | ✝ 基督教 | 座位 1 / 2 / 3 |
 |---|---|---|---|---|
-| 改动前 / before | 32.4% | 33.0% | 34.4% | 37.2% / 32.7% / 29.8% |
-| 改动后 / after | 32.6% | 34.1% | 33.3% | 34.0% / 32.8% / 33.2% |
+| 旧版 / previous (3 万局) | 32.5% | 34.8% | 32.7% | 34.1% / 31.9% / 34.0% |
+| 现版 / current (10 万局) | 33.2% | 33.1% | 33.7% | 33.4% / 33.1% / 33.6% |
+
+故事模式难度用 AI 代替玩家估算（每章每阵营 3000 局）。Story difficulty is estimated with an AI standing in for the player (3,000 games per chapter per side):
+
+| 章 / Chapter | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| 胜率 / win rate | 69.5% | 60.9% | 52.4% | 43.9% | 34.7% | 32.0% | 30.7% |
 
 ## 关于题材 / About the theme
 
@@ -46,4 +52,4 @@ Uma batalha de cartas a três para o navegador: Budismo Tibetano, Comunismo e Cr
 
 ## 开发 / Development
 
-没有构建步骤：所有代码、样式和封面图都内嵌在 `index.html` 里。推送到 `main` 后，`.github/workflows/pages.yml` 会自动部署到 GitHub Pages。There is no build step: code, styles and the cover image are all inlined in `index.html`. Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
+没有构建步骤：所有代码、样式和封面图都内嵌在 `index.html` 里。推送到 `main` 后，`.github/workflows/pages.yml` 会自动部署到 GitHub Pages。测试工具见 [`tools/`](tools/README.md)。There is no build step: code, styles and the cover image are all inlined in `index.html`. Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
